@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(plyr)\nlibrary(KEGGgraph)\nlibrary(Matrix)\n\nload(\"/Volumes/beerenwinkel/ssumana/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/CriticalPval/Pub/BugFixed7Sep2017/Wilcoxtest_critPval_Pub.Rdata\")\nload(\"/Volumes/beerenwinkel/ssumana/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/GOIData/GOImetadata_Pub.RData\")\n#load(\"/Volumes/beerenwinkel/ssumana/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/CriticalPval/NFKB/BugFixed7Sep2017/Wilcoxtest_critPval_NFKB.Rdata\")\n#load(\"/Volumes/beerenwinkel/ssumana/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/GOIData/GOImetadata_NFKB.RData\")\n\nbinary.data <- NULL\nExpts <- NULL\nGOI <- NULL\nsiRNA_gene_Expts <- NULL\nThr = 0.025\n\nfor(i in 1:length(uniqPIDs)){\n  \n  crit.pval <- apply(output.allplates[[i]]$control.pval,2,function(x){\n                                                                      if(any(is.na(x))){\n                                                                        quantile(x[!is.na(x)],Thr)\n                                                                      }else\n                                                                        quantile(x,Thr)})\n  siRNA_gene_Expts <- rbind(siRNA_gene_Expts,\n                            cbind(as.character(subdf_qia_siRNA$ID_manufacturer[subdf_qia_siRNA$Barcode == uniqPIDs[i]]),\n                                  as.character(subdf_qia_siRNA$Catalog_number[subdf_qia_siRNA$Barcode == uniqPIDs[i]])))\n  \n  \n  #Expts <- c(Expts,as.character(subdf_qia_siRNA$Catalog_number[subdf_qia_siRNA$Barcode==uniqPIDs[i]]))\n  #GOI <- c (GOI,as.character(subdf_qia_siRNA$ID_manufacturer[subdf_qia_siRNA$Barcode==uniqPIDs[i]]))\n  \n  temp <- matrix(0, nrow=nrow(output.allplates[[i]]$test.pval), ncol(output.allplates[[i]]$test.pval))\n  for(d in 1:nrow(temp)){temp[d,which(output.allplates[[i]]$test.pval[d,]< crit.pval)] <- 1}\n  #temp[which(output.allplates[[i]]$test.pval< output.allplates[[i]]$crit.pval)] <- 1\n  \n  binary.data <- rbind.fill(binary.data,data.frame(temp))\n}\ncolnames(binary.data) <- colnames(output.allplates[[1]]$control.pval)\nrownames(binary.data) <- siRNA_gene_Expts[,2]\n\nsiRNA_gene_Expts <-  siRNA_gene_Expts[ order(siRNA_gene_Expts[,1]), ]\nD <- t(binary.data[siRNA_gene_Expts[,2],])\n\nGOI_counts <- table(siRNA_gene_Expts[,1])\nGOI_dup <- NULL;\nfor(i in 1:length(GOI_counts)){GOI_dup <- c(GOI_dup,paste(rep(names(GOI_counts[i]),GOI_counts[i]),seq(1:GOI_counts[i]),sep=\".\"))}\nsiRNA_gene_Expts <- cbind(siRNA_gene_Expts,GOI_dup)\n\ncolnames(D) <- siRNA_gene_Expts[,3]\n\ntarRel <- readRDS(\"/Volumes/beerenwinkel/ssumana/Documents/ETH/MasterThesis/data/QIAGEN_HELA.rds\")\nKOmap <- as.matrix(tarRel[siRNA_gene_Expts[,2],unique(siRNA_gene_Expts[,1])])\nrownames(KOmap) <- siRNA_gene_Expts[,3]\n\ngenes <- paste0(\"hsa:\",unique(siRNA_gene_Expts[,1]))\n#pwayGraph <- parseKGML2Graph(getKGMLurl(\"hsa04062\"), expandGenes = TRUE) # hsa04062-chemokine, hsa04510- focal adhesion\npwayGraph <- parseKGML2Graph(getKGMLurl(\"hsa04510\"), expandGenes = TRUE) # hsa04062-chemokine\nsubNet <- subGraph(genes, pwayGraph)\nPhi <-  as(subNet,'matrix')\n#save(list=c(\"D\",\"KOmap\",\"siRNA_gene_Expts\",\"Phi\"),file=\"/Volumes/beerenwinkel/ssumana/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/CriticalPval/NFKB/BugFixed7Sep2017/BinData_NFKB_critPval.Rdata\")\nsave(list=c(\"D\",\"KOmap\",\"siRNA_gene_Expts\",\"Phi\"),file=paste0(\"~/Downloads/BinData_Pub_critPval_\",Thr,\".Rdata\"))\n",
+    "created" : 1504856730513.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "2080292943",
+    "id" : "F394A603",
+    "lastKnownWriteTime" : 7519427984,
+    "last_content_update" : 1504860789839,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled31"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

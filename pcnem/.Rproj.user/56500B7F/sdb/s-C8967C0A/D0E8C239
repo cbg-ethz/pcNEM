@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\n#load(\"~/Documents/ETH/MasterThesis/Plots/2017/07Aug2017/Res_critPval_RandKEGG.Rdata\")\nload(\"/Volumes/beerenwinkel/ssumana/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/CriticalPval/RandKEGG/BugFixed7Sep2017/Res_critPval_RandKEGG.Rdata\")\n\nAllModes <- NULL\n\nfor(i in 1:30){\n  posDist <- ResRealNets[[i]]$pcNEM$pos[[1]]\n  AllModes <- c(AllModes,apply(posDist,1,function(x){max(x)}))\n}\n\n#load(\"~/Documents/ETH/MasterThesis/Plots/2017/27July2017/Res_critPval_Pway05200_TR.Rdata\")\nload(\"/Volumes/beerenwinkel/ssumana/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/CriticalPval/Pway05200/BugFixed7Sep2017/Res_critPval_Pway05200_TR.Rdata\")\n\nfor(i in 1:30){\n  posDist <- ResRealNets[[i]]$pcNEM$pos[[1]]\n  AllModes <- c(AllModes,apply(posDist,1,function(x){max(x)}))\n}\n\ndf <- data.frame(AllModes)\ncolnames(df) <- \"prob\"\n\ncairo_pdf('~/Downloads/Hist_AssignmentProb.pdf',8,6,family=\"sans\")\nggplot(df, aes(x=prob)) +\n  geom_histogram(aes(),binwidth=0.00299, position=\"identity\", alpha=0.5,fill=\"plum4\")+\n  #geom_histogram(aes(y=..density..),binwidth=0.0009, position=\"identity\", alpha=0.5)+\n  #geom_density(alpha=0.6)+\n  ylab(\"Density\") +\n  xlab(\"Assignment probability\")+\n  ylim(0,250)+\n  theme_bw()+ \n  theme(panel.grid.major= element_blank(),#element_line(linetype=5),\n        panel.grid.minor = element_blank(),\n        panel.margin = unit(0.58, \"lines\"),\n        plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), \"cm\"),\n        axis.ticks.x = element_line(size = 0.5,color=\"#525252\"),\n        axis.text.y=element_text(angle=0, vjust=0.3, hjust=0.5,size=12,colour=\"#525252\"),\n        axis.text.x=element_text(angle=0, vjust=0.1, hjust=0,size=12,colour=\"#525252\"),\n        axis.title.x=element_text(angle=0, size=14,vjust=0,colour=\"#525252\"),\n        axis.title.y=element_text(angle=90, size=14,vjust=0,colour=\"#525252\"),\n        panel.border = element_rect(colour = \"gray48\"),\n        legend.position=\"none\",\n        strip.text.y=element_blank(),#element_text(angle=-90),\n        strip.text.x=element_text(angle=0,size = 12, colour = \"#525252\"),\n        strip.background = element_blank())\ndev.off()\n\n#hist(df$prob,breaks = 400)\n\n",
+    "created" : 1503059702518.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "1353039356",
+    "id" : "D0E8C239",
+    "lastKnownWriteTime" : 31525687017865222,
+    "last_content_update" : 1504813982273,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled29"
+    },
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

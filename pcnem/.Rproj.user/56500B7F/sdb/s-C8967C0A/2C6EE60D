@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(mlbench)\nlibrary(caret)\n# load the data\n#load(\"/Volumes/beerenwinkel/ssumana/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/CriticalPval/Pway05200/BugFixed7Sep2017/Res_critPval_Pway05200_TR.Rdata\")\nload(\"/Volumes/beerenwinkel/ssumana/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/CriticalPval/RandKEGG/BugFixed7Sep2017/Res_critPval_RandKEGG.Rdata\")\nD <- Data[[1]]\ncorrelationMatrix <- cor(t(D))\nhighlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)\nremove_feats <- rownames(D)[highlyCorrelated]\nfor(x in 2:30){\n  D <- Data[[x]]\n  correlationMatrix <- cor(t(D))\n  if(any(is.na(rowSums(correlationMatrix)))||any(is.na(colSums(correlationMatrix))))\n    print(x)\n  else{\n    highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)\n    remove_feats <- intersect(remove_feats,rownames(D)[highlyCorrelated])\n  }\n}\n\nsave(remove_feats,file=\"~/Downloads/cor_remove_features_RandKEGG.Rdata\")\n",
+    "created" : 1508315867228.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "3081380514",
+    "id" : "2C6EE60D",
+    "lastKnownWriteTime" : 5489670663369129990,
+    "last_content_update" : 1508341524432,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled33"
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

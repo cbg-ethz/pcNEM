@@ -1,0 +1,512 @@
+}
+}
+load("~/Documents/ETH/MasterThesis/Plots/2016/24Nov2016/SingleDoubleKO_Res/SingleDoubleKO_320_TR_sf100_LowNoise_adaRate25.RData")
+for(i in 1:30){
+Phi <- perfFinal[[i]]$Phi
+Sgenes <- colnames(Phi)
+#pcNEM <- as(transitive.closure(perfFinal[[i]]$pcnem$graph),'matrix')
+pcNEM <- as(perfFinal[[i]]$pcnem$graph,'matrix')
+pcNEM <- pcNEM[Sgenes,Sgenes]
+diag(pcNEM) <- 0
+pcNEM_true <- as(perfFinal[[i]]$pcnem_truenoise$graph,'matrix')
+pcNEM_true <- pcNEM_true[Sgenes,Sgenes]
+diag(pcNEM_true) <- 0
+res <- as.data.frame(rbind(res,cbind(rbind(perfFinal[[i]]$NEffects,perfFinal[[i]]$NEffects),
+rbind("singledoubleKO","singledoubleKO"),
+rbind("pcnem","pcnem_true"),
+rbind(shd(as(pcNEM,'graphNEL'),as(Phi,"graphNEL")),
+shd(as(pcNEM_true,'graphNEL'),as(Phi,"graphNEL"))),
+rbind(perfFinal[[i]]$runtime[1],perfFinal[[i]]$runtime[2]),
+rbind(paste0("FPR: ",perfFinal[[i]]$cntrl$pcnemnoise[1],", FNR: ",perfFinal[[i]]$cntrl$pcnemnoise[2]),
+paste0("FPR: ",perfFinal[[i]]$cntrl$pcnemnoise[1],", FNR: ",perfFinal[[i]]$cntrl$pcnemnoise[2])),
+rbind(perfFinal[[i]]$truescores[2],perfFinal[[i]]$truescores[2]),
+rbind(perfFinal[[i]]$pcnem$mLL,perfFinal[[i]]$pcnem_truenoise$mLL),
+rbind(paste0("FPR: ",perfFinal[[i]]$pcnem$typeIEst,", FNR: ",perfFinal[[i]]$pcnem$typeIIEst),
+paste0("FPR: ",perfFinal[[i]]$pcnem_truenoise$typeIEst,", FNR: ",perfFinal[[i]]$pcnem_truenoise$typeIIEst)))))
+}
+colnames(res) <- c("feat","exptKO","method","value","runtime","Noise","truemLL","estmLL","NoiseEst")
+ggplot(res, aes(factor(exptKO), as.numeric(as.character(value)))) +
+geom_boxplot(aes(fill=factor(as.character(method))),position=position_dodge(0.9), size=0.2,
+outlier.shape = 5,outlier.size = 0.8)+ facet_grid(.~Noise, scales="free",space="free")
+df <- read.csv("/Users/ssumana/Documents/ETH/MasterThesis/data/BARTONELLA/BARTONELLA_AU_CV_importantfields.csv",  header=T)
+df_cv1 <- df[df$Experiment=="BARTONELLA-AU-CV1",]
+GOI <- c("ITGB1","ITGA5","TLN1","TES","FERMT2","DNMT3A","ZEB1","RAC1","ARHGEF2","CUL3","RBX1")
+#GOI <- c("PTK2","PXN","TLN1","VCL","ITGB1","CDC42","RAC1","SRC") # Take from Qiagen
+subdf_cv1 <- NULL
+for(x in 1:length(GOI)){
+subdf_cv1 <- rbind(subdf_cv1,df_cv1[df_cv1$Name==GOI[x],])
+}
+filt_subdf_cv1 <- subdf_cv1[subdf_cv1$Catalog_number!="L-004506-00",]
+siRNAIDs <- as.character(filt_subdf_cv1$Catalog_number)
+entrezGoi <- as.character(unique(filt_subdf_cv1$ID_manufacturer))
+PlateIDs <- as.character(filt_subdf_cv1$Barcode)
+WellIDs <- as.character(filt_subdf_cv1$WellName)
+uniqPIDs <- unique(PlateIDs)
+save.image("~/Downloads/GOImetadata.RData")
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+library(pcalg)
+library(pROC)
+library(pcnem)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+map
+names
+D_nem <- D
+colnames(D_nem) <- siRNA_gene_Expts[,2]
+#control <- set.default.parameters(unique(colnames(D_nem)),type="mLL",pcombi = FALSE,trans.close=TRUE)
+control <- set.default.parameters(unique(colnames(D_nem)),type="mLL",pcombi = FALSE,trans.close=FALSE)
+control$mc.cores <- 3
+rnem <- nem.bootstrap(D_nem, nboot=5,inference="ModuleNetwork",control=control, verbose=FALSE)
+map
+ep
+LLperGene
+control$Pe[,1:NCOL(L)]
+control$para[1]^(D1 %*% (1-Phi2)) * (1-control$para[1])^(D0 %*% (1-Phi2)) * (1-control$para[2])^(D1 %*% Phi2) * control$para[2]^(D0 %*% Phi2)
+}
+control$para[1]^(D1 %*% (1-Phi2)) * (1-control$para[1])^(D0 %*% (1-Phi2)) * (1-control$para[2])^(D1 %*% Phi2) * control$para[2]^(D0 %*% Phi2)
+D1
+D0
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+ep
+LLperGene
+L
+View(L)
+control$para[1]^(D1 %*% (1-Phi2)) * (1-control$para[1])^(D0 %*% (1-Phi2)) * (1-control$para[2])^(D1 %*% Phi2) * control$para[2]^(D0 %*% Phi2)
+apply(((D1[l,]*Pred1) + (D0[l,]* Pred0)),2,prod)
+!is.null(rownames(D1))
+library(pcnem)
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+pcnem$mappos
+pcnem$graph
+pcnem$mLL
+pcnem$pos
+pcnem$mappos
+pcnem$selected
+control$lambda != 0 | !("doMC" %in% loadedNamespaces())
+pcnem$LLperGene
+pcnem$selected
+pcnem$control
+library(pcnem)
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+results["mLL",]
+results["mappos",]
+results["mappos",which.max(s)][[1]]
+control$lambda != 0 | !("doMC" %in% loadedNamespaces())
+s       <- unlist(results["mLL",])
+ep      <- results["pos",]
+map     <- results["mappos",]
+LLperGene = results["LLperGene",]
+para = results["para",]
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+control$lambda != 0 | !("doMC" %in% loadedNamespaces())
+s       <- unlist(results["mLL",])
+ep      <- results["pos",]
+map     <- results["mappos",]
+LLperGene = results["LLperGene",]
+para = results["para",]
+results["mappos",which.max(s)][[1]]
+unique(unlist(selected[Sgenes]))
+selected = results["mappos",which.max(s)][[1]]
+unique(unlist(selected[Sgenes]))
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+library(pcalg)
+library(pROC)
+library(pcnem)
+D_nem <- D
+colnames(D_nem) <- siRNA_gene_Expts[,2]
+#control <- set.default.parameters(unique(colnames(D_nem)),type="mLL",pcombi = FALSE,trans.close=TRUE)
+control <- set.default.parameters(unique(colnames(D_nem)),type="mLL",pcombi = FALSE,trans.close=FALSE)
+control$mc.cores <- 3
+rnem <- nem.bootstrap(D_nem, nboot=5,inference="ModuleNetwork",control=control, verbose=FALSE)
+control$lambda != 0 | !("doMC" %in% loadedNamespaces())
+s       <- unlist(results["mLL",])
+ep      <- results["pos",]
+map     <- results["mappos",]
+LLperGene = results["LLperGene",]
+para = results["para",]
+selected = results["mappos",which.max(s)][[1]]
+unique(unlist(selected[Sgenes]))
+Sgenes
+head(selected)
+unique(unlist(selected[Sgenes]))
+selected[Sgenes]
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+s       <- unlist(results["mLL",])
+ep      <- results["pos",]
+map     <- results["mappos",]
+LLperGene = results["LLperGene",]
+para = results["para",]
+selected = results["mappos",which.max(s)][[1]]
+mappos
+map
+results["mappos",which.max(s)][[1]]
+results["mappos",]
+library(pcnem)
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+map
+library(pcnem)
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+map
+View(Theta)
+View(L)
+library(pcnem)
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+View(L)
+View(L)
+load("~/Documents/ETH/MasterThesis/Plots/2016/18Oct2016/Data/NoNoise/Data_320_0.001_0.001_sf100.RData")
+D <- Data[[1]]
+KOmap <- knockout_map[[1]]
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+library(pcnem)
+load("~/Documents/ETH/MasterThesis/Plots/2016/18Oct2016/Data/NoNoise/Data_320_0.001_0.001_sf100.RData")
+library(pcalg)
+library(pROC)
+library(pcnem)
+KOmap <- knockout_map[[1]]
+D <- Data[[1]]
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+View(L)
+View(ep)
+View(Theta)
+View(LP)
+View(L)
+L*control$Pe[,1:NCOL(L)]
+control$Pe[,1:NCOL(L)]
+L
+control$Pe[,1:NCOL(L)]
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+View(L)
+View(LP)
+View(ep)
+View(Theta)
+Q
+library(pcnem)
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+View(L)
+View(LP)
+control$Pe[,1:NCOL(L)]
+L*control$Pe[,1:NCOL(L)]
+D_nem <- D
+colnames(D_nem) <- siRNA_gene_Expts[,2]
+#control <- set.default.parameters(unique(colnames(D_nem)),type="mLL",pcombi = FALSE,trans.close=TRUE)
+control <- set.default.parameters(unique(colnames(D_nem)),type="mLL",pcombi = FALSE,trans.close=FALSE)
+control$mc.cores <- 3
+rnem <- nem.bootstrap(D_nem, nboot=5,inference="ModuleNetwork",control=control, verbose=FALSE)
+View(L)
+View(Phi2)
+load("~/Documents/ETH/MasterThesis/Plots/2016/18Oct2016/Data/NoNoise/Data_320_0.001_0.001_sf100.RData");KOmap <- knockout_map[[1]];D <- Data[[1]]
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+View(L)
+View(Phi2)
+View(Pred0)
+View(Pred1)
+View(L)
+View(L)
+View(LP)
+View(Theta)
+library(pcnem)
+load("~/Documents/ETH/MasterThesis/Plots/2016/18Oct2016/Data/NoNoise/Data_320_0.001_0.001_sf100.RData");KOmap <- knockout_map[[1]];D <- Data[[1]]
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+library(pcnem)
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+pcnem$selected
+pcnem$mappos
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+library(pcnem)
+View(LP)
+View(L)
+View(LP)
+library(pcnem)
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+pcnem$graph
+pcnem$mLL
+pcnem$pos
+pcnem$mappos
+pcnem$selected
+pcnem$LLperGene
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+#load("~/Documents/ETH/MasterThesis/Plots/2016/18Oct2016/Data/NoNoise/Data_320_0.001_0.001_sf100.RData");KOmap <- knockout_map[[1]];D <- Data[[1]]
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+starttime1a <- proc.time()
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+endtime1a <- proc.time()
+D_nem <- D
+colnames(D_nem) <- siRNA_gene_Expts[,2]
+#control <- set.default.parameters(unique(colnames(D_nem)),type="mLL",pcombi = FALSE,trans.close=TRUE)
+control <- set.default.parameters(unique(colnames(D_nem)),type="mLL",pcombi = FALSE,trans.close=FALSE)
+control$mc.cores <- 3
+rnem <- nem.bootstrap(D_nem, nboot=5,inference="ModuleNetwork",control=control, verbose=FALSE)
+pcnem$mLL
+pcnem$pos
+pcnem$mappos
+pcnem$selected
+library(pcnem)
+source('~/.active-rstudio-document')
+pcnem$overlapBoot
+rnem$overlapBoot
+library(pcnem)
+rnem$control$para
+pcnem$control$noiseEst
+control$pcombi & control$noiseEst
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+control$noiseEst <- FALSE
+pcnem <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+pcnem$control$para
+source('~/GitHub/c-NEMs/Package/pcnem/R/SearchNearestDAG.R')
+phi <- as(pcnem$graph,'matrix')
+?binarize
+library(biclust)
+plot(binarize(as(pcnem$overlapBoot,'matrix')),"graphNEL")
+plot(binarize(as((pcnem$overlapBoot,'matrix')>0.5)*1),"graphNEL")
+plot(binarize(as(pcnem$overlapBoot,'matrix')>0.5)*1),"graphNEL")
+plot(binarize(as(pcnem$overlapBoot,'matrix')>0.5)*1),"graphNEL")
+plot(as(binarize(as(pcnem$overlapBoot,'matrix')>0.5)*1,"graphNEL"))
+plot(as(binarize(as(pcnem$overlapBoot,'matrix')>0.6)*1,"graphNEL"))
+plot(as(binarize(as(pcnem$overlapBoot,'matrix')>0.4)*1,"graphNEL"))
+plot(as(binarize(as(pcnem$overlapBoot,'matrix')>0.2)*1,"graphNEL"))
+plot(as(binarize(as(pcnem$overlapBoot,'matrix')>0.2)*1,"graphNEL"))
+plot(as(as(pcnem$overlapBoot,'matrix')>0.2*1,"graphNEL"))
+plot(as(as(pcnem$overlapBoot,'matrix')>0.2*1,"graphNEL"))
+plot(as(as(pcnem$overlapBoot,'matrix')>0.3*1,"graphNEL"))
+plot(as(as(pcnem$overlapBoot,'matrix')>0.3*1,"graphNEL"))
+plot(as(as(pcnem$overlapBoot,'matrix')>0.35*1,"graphNEL"))
+plot(as(as(pcnem$overlapBoot,'matrix')>0.33*1,"graphNEL"))
+plot(as(as(pcnem$overlapBoot,'matrix')>0.32*1,"graphNEL"))
+startDag <- as(pcnem$overlapBoot,'matrix')>0.5*1
+consensus <- as(pcnem$overlapBoot,'matrix')>0.3*1
+source('~/GitHub/c-NEMs/Package/pcnem/R/SearchNearestDAG.R')
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+source('~/GitHub/c-NEMs/Package/pcnem/R/pcNemFunctions.R')
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+a$bestDistance
+control$iterations <- 600
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+a$bestDistance
+plot(a$graphs)
+plot(as(a$maxDAG,"graphNEL"))
+plot(as(a$maxDAG,"graphNEL"))
+plot(a$Distances)
+plot(unlist(a$Distances))
+a$Distances
+source('~/GitHub/c-NEMs/Package/pcnem/R/SearchNearestDAG.R')
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+plot(unlist(a$Distances))
+a$bestDistance
+plot(unlist(a$LLscores))
+source('~/GitHub/c-NEMs/Package/pcnem/R/SearchNearestDAG.R')
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+plot(unlist(a$Distances))
+exp(4)-exp(5)
+exp(-1)
+exp(-1/50)
+exp(-1/40)
+control$iterations <- 1e4
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+source('~/GitHub/c-NEMs/Package/pcnem/R/SearchNearestDAG.R')
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+source('~/GitHub/c-NEMs/Package/pcnem/R/SearchNearestDAG.R')
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+plot(unlist(a$Distances))
+a$bestDistance
+plot(unlist(a$LLscores))
+plot(unlist(a$Temp))
+plot(unlist(a$AcceptRate))
+control$Temp <- 0.1
+exp(-1)
+exp(1)
+exp(10)
+control$Temp <- 0.1
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+plot(unlist(a$AcceptRate))
+plot(unlist(a$Temp))
+a$bestDistance
+plot(unlist(a$Distances))
+control$Temp <- 100
+control$Temp <- 1
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+source('~/GitHub/c-NEMs/Package/pcnem/R/SearchNearestDAG.R')
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+source('~/GitHub/c-NEMs/Package/pcnem/R/SearchNearestDAG.R')
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+a$bestDistance
+plot(unlist(a$Distances))
+control$Temp
+a$maxLLscore
+pcnem$mLL
+plot(unlist(a$AcceptRate))
+control$Temp <- 1e2
+a <- nem.nearestDAG(8,startDag,D,control,consensus)
+plot(unlist(a$AcceptRate))
+a$bestDistance
+is.DAG((overlapBoot>thresh)*1)
+library(gRbase)
+is.DAG((overlapBoot>thresh)*1)
+paste0("The distance between consensus and nearest DAG from the search is ",resNearestDAG$bestDistance)
+paste0("The distance between consensus and nearest DAG from the search is ",a$bestDistance)
+print(paste0("The distance between consensus and nearest DAG from the search is ",a$bestDistance))
+library(pcnem)
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+#load("~/Documents/ETH/MasterThesis/Plots/2016/18Oct2016/Data/NoNoise/Data_320_0.001_0.001_sf100.RData");KOmap <- knockout_map[[1]];D <- Data[[1]]
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 50
+control$mc.cores <- 2
+starttime1a <- proc.time()
+pcnem <- nem.bootstrap(D,nboot = 3,threshold=0.3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+endtime1a <- proc.time()
+pcnem <- nem.bootstrap(D,nboot = 3,thresh =0.3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+pcnem$graph
+plot(pcnem$graph)
+pcnem$mLL
+pcnem$pos
+pcnem$mappos
+pcnem$control
+pcnem$selected
+pcnem$LLperGene
+pcnem$bestDistance
+pcnem$overlapBoot
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+#load("~/Documents/ETH/MasterThesis/Plots/2016/18Oct2016/Data/NoNoise/Data_320_0.001_0.001_sf100.RData");KOmap <- knockout_map[[1]];D <- Data[[1]]
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 1000
+control$mc.cores <- 2
+starttime1a <- proc.time()
+pcnem <- nem.bootstrap(D,nboot = 3,thresh =0.3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+endtime1a <- proc.time()
+load("~/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/BinaryData/SignalMat095/SigMat_PublishedGenes_QiagenData.Rdata")
+pcnem1 <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+library("snow", lib.loc="~/Library/R/3.2/library")
+library("doSNOW", lib.loc="~/Library/R/3.2/library")
+pcnem1 <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+control$iterations <- 50
+pcnem1 <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+pcnem$overlapBoot
+pcnem$bestDistance
+a <- (pcnem$overlapBoot>0.5)*1
+plot(as(a,"graphNEL"))
+is.DAG(a)
+pcnem1 <- nem.bootstrap(D,nboot = 3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+library(pcnem)
+pcnem1 <- nem.bootstrap(D,nboot = 3,thresh=0.5,inference="AdaSimAnneal",control=control,verbose=FALSE)
+library(pcnem)
+pcnem1 <- nem.bootstrap(D,nboot = 3,thresh=0.5,inference="AdaSimAnneal",control=control,verbose=FALSE)
+pcnem1$overlapBoot
+pcnem <- nem.bootstrap(D,nboot = 3,thresh=0.3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+load("~/Downloads/Pub/PublishedGenes_QiagenData_wInv.Rdata")
+pcnem <- nem.bootstrap(D,nboot = 3,thresh =0.3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+pcnem <- nem.bootstrap(D,nboot = 3,thresh =0.3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+control$iterations <- 100
+pcnem <- nem.bootstrap(D,nboot = 3,thresh =0.3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+pcnem <- nem.bootstrap(D,nboot = 3,thresh =0.3,inference="AdaSimAnneal",control=control,verbose=FALSE)
+control$iterations <- 500
+pcnem <- nem.bootstrap(D,nboot = 3,thresh =0.3,inference="AdaSimAnneal",control=control,verbose=FALSE)

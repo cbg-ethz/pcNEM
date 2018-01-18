@@ -1,0 +1,38 @@
+import(methods)
+importMethodsFrom(graph, adj, degree, "edgeData<-", edgeDataDefaults,
+                  "edgeDataDefaults<-", edgeL, "edgemode<-", edges,
+                  inEdges, nodes, numEdges, removeEdge, toDotR)
+importMethodsFrom(Rgraphviz, AgNode, botLeft, boundBox, getNodeHeight,
+                  getNodeXY, getX, getY, lines, name, plot, upRight)
+importFrom(Rgraphviz, agopen, buildEdgeList)
+importFrom(boot, boot)
+importFrom(e1071, bincombinations, hamming.distance)
+importFrom(graphics, abline, axis, box, close.screen, erase.screen,
+           hist, image, par, points, screen, segments, split.screen)
+importFrom(grDevices, colorRampPalette, dev.off, gray, pdf, x11)
+importFrom(RBGL, strongComp, transitive.closure, tsort)
+importFrom(RColorBrewer, brewer.pal)
+importFrom(stats, as.dist, binom.test, cor, cutree, dbeta, dist, dnorm,
+           ecdf, hclust, nlm, p.adjust, pbeta, quantile, rect.hclust,
+           rnorm, runif, sd, var, model.matrix)
+importFrom(utils, combn)
+importFrom(statmod, permp)
+importFrom(plotrix, color.legend)
+importFrom(limma, normalizeQuantiles, makeContrasts, lmFit, contrasts.fit, eBayes)
+importFrom(MASS, mvrnorm)
+importFrom(gRbase, is.DAG)
+importFrom(pcalg, shd)
+importFrom(minqa, bobyqa)
+
+export(BFSlevel, closest.transitive.greedy, sampleRndNetwork, sampleData, sampleData.pcnem, getDensityMatrix, infer.edge.type, local.model.prior, nem.bootstrap,
+       nem.jackknife, nem.consensus, nem, nemModelSelection,
+       nem.calcSignificance, nem.discretize, network.AIC, plotEffects,
+       plot.nem, plot.nem.greedy, plot.nem.consensus, plot.nem.bootstrap, plot.nem.jackknife, plot.nem.greedy, plot.ModuleNetwork, plot.score, plot.pairwise, plot.triples, plot.nem.greedyMAP, plot.nem.BN, plot.mc.eminem, plot.dynoNEM,    
+       prune.graph, SCCgraph, filterEGenes, getRelevantEGenes,
+       set.default.parameters, sim.intervention, subsets, transitive.closure,
+       transitive.reduction, transitive.projections, enumerate.models,
+       nem.cont.preprocess, print.nem, print.nem.greedy, print.ModuleNetwork,
+       print.nem.greedyMAP, print.pairwise, print.triples, print.nem.jackknife,
+       print.nem.bootstrap, print.nem.consensus, print.nem.BN, print.score, print.mc.eminem, print.dynoNEM, 
+       quicknem, prior.EgeneAttach.EB)
+

@@ -1,0 +1,512 @@
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12)),
+edge=list(color="gray56"))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12)),
+edge=list(color="gray2"))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "red")
+par(mfrow=c(1,3))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM graph",col.main = "gray56")
+png("~/Downloads/plot.png", units="in", width=15, height=10, res=125)
+par(mfrow=c(1,3))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+dev.off()
+png("~/Downloads/plot.png", units="in", width=12, height=10, res=125)
+par(mfrow=c(1,3))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+dev.off()
+png("~/Downloads/plot.png", units="in", width=12, height=8, res=125)
+par(mfrow=c(1,3))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+dev.off()
+png("~/Downloads/plot.png", units="in", width=14, height=8, res=125)
+par(mfrow=c(1,3))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+dev.off()
+png("~/Downloads/plot.png", units="in", width=14, height=8, res=125)
+par(mfrow=c(2,2))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+dev.off()
+png("~/Downloads/plot.png", units="in", width=20, height=8, res=125)
+par(mfrow=c(1,3))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+dev.off()
+pcnem$typeIEst
+pcnem$typeIIEst
+load("~/Downloads/PublishedGenes_QiagenData.Rdata")
+library(pcalg)
+library(pROC)
+library(pcnem)
+set.seed(456)
+n <- 8
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+#control$iterations <- 40000
+starttime1a <- proc.time()
+pcnem <- nem(D,inference="AdaSimAnneal",control=control,verbose=FALSE)
+endtime1a <- proc.time()
+D_nem <- D
+colnames(D_nem) <- siRNA_gene_Expts[,2]
+control <- set.default.parameters(unique(colnames(D_nem)),type="mLL",pcombi = FALSE,trans.close=FALSE)
+rnem <- nem(D_nem, inference="ModuleNetwork",control=control, verbose=FALSE)
+Sgenes <- colnames(Phi)
+Sgenes <- sapply(strsplit(Sgenes, "hsa:"), "[[", 2)
+dimnames(Phi) <- list(Sgenes,Sgenes)
+pcNEM_mat <- as(pcnem$graph,'matrix')
+pcNEM_mat <- pcNEM_mat[Sgenes,Sgenes]
+rNEM_mat <- as(rnem$graph,'matrix')
+rNEM_mat <- rNEM_mat[Sgenes,Sgenes]
+shd(as(pcNEM_mat,'graphNEL'),as(Phi,"graphNEL"))
+shd(as(rNEM_mat,'graphNEL'),as(Phi,"graphNEL"))
+auc(roc(Phi,pcNEM_mat))
+auc(roc(Phi,rNEM_mat))
+par(mfrow=c(1,3))
+plot(as(pcNEM_mat,"graphNEL"))
+plot(as(rNEM_mat,"graphNEL"))
+plot(as(Phi,"graphNEL"))
+shd(as(pcNEM_mat,'graphNEL'),as(Phi,"graphNEL"))
+shd(as(rNEM_mat,'graphNEL'),as(Phi,"graphNEL"))
+png("~/Downloads/plot_wInv.png", units="in", width=20, height=8, res=125)
+par(mfrow=c(1,3))
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+dev.off()
+library(Rgraphviz)
+png("~/Downloads/plot_wInv.png", units="in", width=20, height=8, res=125)
+par(mfrow=c(1,3))
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+dev.off()
+par(mfrow=c(1,3))
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+par(mfrow=c(1,3))
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+par(mfrow=c(1,3))
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+pcnem$typeIEst
+pcnem$typeIIEst
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),transitiveresuction=FALSE,
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),transitiveresuction=FALSE,
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),transitivereduction=FALSE,
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(rnem$graph,transitivereduction=FALSE,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(rnem$graph,transitivereduction=FALSE,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(rnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(transitive.reduction(rnem$graph),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+plot(transitive.reduction(rnem$graph,mat=FALSE),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+?transitive.reduction
+plot(as(transitive.reduction(rnem$graph),"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+par(mfrow=c(1,3))
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(as(transitive.reduction(rnem$graph),"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+png("~/Downloads/plot_wInv.png", units="in", width=20, height=8, res=125)
+par(mfrow=c(1,3))
+nodeLab <- c("ITGB1","FAK","PXN","RAC1","SRC","TLN1","VCL","CDC42")
+names(nodeLab) <- nodes(pcnem$graph)
+plot(as(Phi,"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="KEGG graph",col.main = "gray56")
+plot(pcnem$graph,nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="pcNEM",col.main = "gray56")
+plot(as(transitive.reduction(rnem$graph),"graphNEL"),nodeAttrs=list(label = nodeLab),
+attrs=list(node=list(shape = "rectangle",
+color="olivedrab3",
+fontcolor="deepskyblue4",
+fontsize=12),
+edge=list(color="gray56")),main="NEM",col.main = "gray56")
+dev.off()
+load("~/Downloads/PublishedGenes_QiagenData.Rdata")
+View(D)
+View(D)
+source('~/.active-rstudio-document', echo=TRUE)
+shd(as(pcNEM_mat,'graphNEL'),as(Phi,"graphNEL"))
+shd(as(rNEM_mat,'graphNEL'),as(Phi,"graphNEL"))
+pcnem$typeIIEst
+pcnem$typeIEst
+load("~/Downloads/PublishedGenes_QiagenData.Rdata")
+source('~/.active-rstudio-document', echo=TRUE)
+load("~/Downloads/NewCellRange/PublishedGenes_QiagenData_wInv_newCellCountRange.Rdata")
+source('~/.active-rstudio-document')
+shd(as(pcNEM_mat,'graphNEL'),as(Phi,"graphNEL"))
+shd(as(rNEM_mat,'graphNEL'),as(Phi,"graphNEL"))
+auc(roc(Phi,pcNEM_mat))
+auc(roc(Phi,rNEM_mat))
+load("~/Downloads/OnlyCellQiagen/PublishedGenes_QiagenData.Rdata")
+load("~/Documents/ETH/MasterThesis/data/singleCellFeatures/DataStorage/GOIData/PVALUE/Qiagen/Pvalue_H001-1E.Rdata")
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+shd(as(pcNEM_mat,'graphNEL'),as(Phi,"graphNEL"))
+shd(as(rNEM_mat,'graphNEL'),as(Phi,"graphNEL"))
+auc(roc(Phi,pcNEM_mat))
+auc(roc(Phi,rNEM_mat))
+library("doSNOW", lib.loc="~/Library/R/3.2/library")
+"snow" %in% loadedNamespaces()
+control$mc.cores <- 3
+nem.bootstrap(D_nem,nboot = 10,thresh = 0.9, inference="ModuleNetwork",control=control, verbose=FALSE)
+D <- D[,1:40]
+tempD <- D[,1:40]
+tempD <- D[1:40,]
+control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 100
+nem.bootstrap(tempD,nboot=4, thresh = 0.9, inference="AdaSimAnneal",control=control,verbose=FALSE)
+View(tempD)
+control <- set.default.parameters(unique(colnames(tempD)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+nem.bootstrap(tempD,nboot=4, thresh = 0.9, inference="AdaSimAnneal",control=control,verbose=FALSE)
+nem.bootstrap(tempD,nboot=4, thresh = 0.9, inference="AdaSimAnneal",control=control,verbose=FALSE)
+load("~/Downloads/NewCellRange/PublishedGenes_QiagenData_wInv_newCellCountRange.Rdata")
+library(pcalg)
+library(pROC)
+library(pcnem)
+D_nem <- D
+colnames(D_nem) <- siRNA_gene_Expts[,2]
+control <- set.default.parameters(unique(colnames(D_nem)),type="mLL",pcombi = FALSE,trans.close=FALSE)
+#nem.bootstrap(D_nem,nboot = 10,thresh = 0.9, inference="ModuleNetwork",control=control, verbose=FALSE)
+control$mc.cores <- 3
+nem.bootstrap(D_nem,nboot = 10,thresh = 0.9, inference="ModuleNetwork",control=control, verbose=FALSE)
+nem.bootstrap(D_nem,nboot = 10,thresh = 0.9, inference="ModuleNetwork",control=control, verbose=FALSE)
+tempD <- D[,1:40]
+tempD <- D[1:40,]
+control <- set.default.parameters(unique(colnames(tempD)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control$map <- as.matrix(KOmap)
+control$iterations <- 100
+nem.bootstrap(tempD,nboot=4, thresh = 0.9, inference="AdaSimAnneal",control=control,verbose=FALSE)
+setdiff(unlist(control$map[intersect(names(control$map), colnames(D))]),"time")
+load("~/Downloads/plots.RData")
+grid.arrange(plot1, plot2, ncol=2, clip=TRUE)
+?Sys.sleep
+5/120

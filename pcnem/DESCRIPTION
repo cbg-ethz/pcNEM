@@ -1,0 +1,24 @@
+Package: pcnem
+Title: (Dynamic) Nested Effects Models and Deterministic Effects
+        Propagation Networks to reconstruct phenotypic hierarchies
+Version: 2.46.0
+Author: Holger Froehlich, Florian Markowetz, Achim Tresch, Theresa Niederberger, Christian Bender, Matthias Maneck, Claudio Lottaz, Tim Beissbarth
+Description: The package 'nem' allows to reconstruct features of pathways from the nested structure of perturbation effects. It takes as input (1.) a set of pathway components, which were perturbed, and (2.) phenotypic readout of these perturbations (e.g. gene expression, protein expression). The output is a directed graph representing the phenotypic hierarchy.
+Reference: Froehlich H, Beissbarth T, Tresch A, Kostka D, Jacob J,
+        Spang R, Markowetz F: Analyzing gene perturbation screens with
+        nested effects models in R and bioconductor, Bioinformatics,
+        2008, 24:2549-50.
+Maintainer: Holger Froehlich <frohlich@bit.uni-bonn.de>
+Depends: R (>= 3.0)
+Enhances: doMC, snow, parallel
+Imports: boot, e1071, graph, graphics, grDevices, methods, RBGL (>=
+        1.8.1), RColorBrewer, stats, utils, Rgraphviz, statmod,
+        plotrix, limma, MASS, gRbase, minqa, pcalg
+Suggests: Biobase (>= 1.10)
+LazyLoad: Yes
+biocViews: Microarray, Bioinformatics, GraphsAndNetworks, Pathways,
+        SystemsBiology, NetworkInference
+URL: http://www.bioconductor.org
+License: GPL (>= 2)
+NeedsCompilation: yes
+Packaged: 2016-05-04 02:53:47 UTC; biocbuild

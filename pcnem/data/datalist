@@ -1,0 +1,4 @@
+BoutrosRNAi2002: BoutrosRNAiDens BoutrosRNAiDiscrete BoutrosRNAiExpression BoutrosRNAiLods BoutrosRNAiLogFC
+Ivanova2006RNAiTimeSeries: dat
+NiederbergerMediator2012: NiederbergerMediatorLods NiederbergerMediatorLogFC NiederbergerMediatorPVals
+SahinRNAi2008: dat.normalized dat.unnormalized

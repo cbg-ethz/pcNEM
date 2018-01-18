@@ -1,0 +1,738 @@
+%\VignetteIndexEntry{Nested Effects Models - An example in Drosophila immune response}
+%\VignetteDepends{}
+%\VignetteKeywords{Pathways}
+%\VignettePackage{nem}
+
+
+\documentclass[11pt,a4paper]{article}
+
+%\usepackage[round]{natbib}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage[latin1]{inputenc}
+\newcommand{\gene}[1]{\emph{#1}}
+
+\setlength{\parskip}{1.5ex}
+\setlength{\parindent}{0cm}
+
+% NEW COMMANDS
+% ------------------------------------------------
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rpackage}[1]{\textit{#1}}
+\newcommand{\Rclass}[1]{\textit{#1}}
+\newcommand{\Rfunction}[1]{{\small\texttt{#1}}}
+
+\newcommand{\myincfig}[4]{
+  \setkeys{Gin}{width=#1\textwidth}
+  \begin{figure}[htbp]
+    \begin{center}
+      #2
+      \caption{\label{#3}#4}
+    \end{center}
+  \end{figure}
+  \setkeys{Gin}{width=.8\textwidth}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+<<no.nonsense,echo=FALSE,results=hide>>=
+rm(list=ls())
+@
+
+\title{--- Nested Effects Models --- \\ An example in \emph{Drosophila} immune response}
+\author{Holger Fr\"ohlich\footnote{University of Bonn, Bonn-Aachen International Center for Information Technology, frohlich@bit.uni-bonn.de} \and Florian Markowetz\footnote{Cancer Research UK, Florian.Markowetz@cancer.org.uk}}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+Cellular signaling pathways, which are not modulated on a transcriptional level,
+cannot be directly deduced from expression profiling experiments. The situation
+changes, when external interventions like RNA interference or gene knock-outs
+come into play. 
+
+In \cite{Markowetz2005Inference, Markowetz2007, Frohlich2007RNAiBMC, Frohlich2008NEMsBioinformatics, Tresch2008NEMs, Frohlich2009NEMComplete} algorithms were introduced to infer non-transcriptional pathway features based on differential
+gene expression in silencing assays. 
+These methods are implemented in the Bioconductor package \texttt{nem}.
+Here we demonstrate its practical use in
+the context of an RNAi data set investigating the response to microbial
+challenge in Drosophila melanogaster. 
+
+We show in detail how the data is pre-processed and discretized,
+how the pathway can be reconstructed by different approaches, and how the final result can be post-processed 
+to increase interpretability.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Drosophila RNAi data}
+
+We applied our method to data from a study on innate
+immune response in {\em Drosophila} \cite{Boutros2002Data}. 
+Selectively removing
+signaling components blocked induction of all, or
+only parts, of the transcriptional response to LPS.
+
+%-----------------------------------------------------------
+\paragraph{Dataset summary}
+The dataset consists of 16 Affymetrix-microarrays: 4 replicates of control
+experiments without LPS and without RNAi (negative controls), 4 replicates of
+expression profiling after stimulation with LPS but without RNAi (positive
+controls), and 2 replicates each of expression profiling after applying LPS and
+silencing one of the four candidate genes \gene{tak}, \gene{key}, \gene{rel},
+and \gene{mkk4/hep}.
+
+
+%-----------------------------------------------------------
+\paragraph{\label{preprocess}Preprocessing and E-gene selection}
+For preprocessing, we perform normalization on probe level using a variance
+stabilizing transformation (Huber \emph{et al.}, 2002), and probe set summarization
+using a median polish fit of an additive model (Irizarry \emph{et al.}, 2003).
+The result is included as a dataset in the package \texttt{nem}.
+
+<<results=hide>>=
+library(nem)
+data("BoutrosRNAi2002")
+@
+
+The function \texttt{nem.discretize} implements the following two preprocessing steps:
+First, we select the genes as effect reporters (E-genes), which are more then two-fold upregulated by LPS
+treatment.
+Next, we transform the continuous expression data to binary values. We set an
+E-genes state in an RNAi experiment to \texttt{1} if its expression value is
+sufficiently far from the mean of the positive controls, \emph{i.e.} if the
+intervention interrupted the information flow. If the E-genes expression is
+close to the mean of positive controls, we set its state to \texttt{0}.
+
+Let $C_{ik}$ be the continuous expression level of $E_i$ in experiment $k$. Let
+$\mu^+_i$ be the mean of positive controls for $E_i$, and $\mu^-_i$ the mean of
+negative controls. To derive binary data $E_{ik}$, we defined individual
+cutoffs for every gene $E_i$ by:
+
+\begin{equation}
+E_{ik} =
+\begin{cases}
+\ 1 & \text{if }C_{ik} < \kappa\cdot\mu^+_i + (1-\kappa)\cdot\mu^-_i ,\\
+\ 0 & \text{else}.
+\end{cases}
+\label{discretization}
+\end{equation}
+<<>>=
+res.disc <- nem.discretize(BoutrosRNAiExpression,neg.control=1:4,pos.control=5:8,cutoff=.7)
+@
+
+<<echo=FALSE, results=hide>>=
+disc <- cbind(res.disc$neg,res.disc$pos,res.disc$dat)
+e.2fold <- BoutrosRNAiExpression[res.disc$sel,]
+
+#--- hierarchisch clustern
+library(e1071)
+hc    <- hclust(as.dist(hamming.distance(disc[,9:16])))
+e.2fold <- e.2fold[hc$order, ]
+disc  <- disc [hc$order, ]
+@
+
+<<label=data_cont,fig=TRUE,echo=FALSE,results=hide,include=FALSE,width=5,height=13>>=
+#--- CONTINUOUS DATA
+#pdf("data_cont.pdf",width=5,height=13)
+par(las=2,mgp=c(5.5,1,0),mar=c(6.7,7,4,1),cex.lab=1.7,cex.main=2)
+image(x   = 1:ncol(e.2fold),
+y   = 1:nrow(e.2fold),
+z   = scale(t(e.2fold)),
+main= "Original data",
+xlab= "Experiments",
+xaxt= "n",
+ylab= "E-genes",
+yaxt= "n",
+col = gray(seq(0,.95,length=10))
+)
+abline(v=c(4,8,10,12,14)+.5)
+axis(1,1:ncol(e.2fold),colnames(e.2fold))
+axis(2,1:nrow(e.2fold),rownames(e.2fold))
+#dev.off()
+@
+
+<<label=data_disc,fig=TRUE,echo=FALSE,results=hide,include=FALSE,width=5,height=13>>=
+#--- DISCRETE DATA
+#pdf("data_disc.pdf",width=5,height=13)
+par(las=2,mgp=c(5.5,1,0),mar=c(6.7,7,4,1),cex.lab=1.7,cex.main=2)
+image(x   = 1:ncol(disc),
+      z   = t(disc),
+      main= "Discretized data",
+      xlab= "Experiments",
+      xaxt= "n",
+      ylab= "",
+      yaxt= "n",
+      col = gray(seq(.95,0,length=10))
+      )
+abline(v=c(4,8,10,12,14)+.5)
+axis(1,1:ncol(e.2fold),colnames(e.2fold))
+#dev.off()
+@
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=.4\textwidth]{nem-data_cont}
+%\hspace{-1cm}
+\includegraphics[width=.4\textwidth]{nem-data_disc}
+\end{center}
+\caption{\label{data}Continuous and discretized data}
+\end{figure}
+
+%-----------------------------------------------------------
+\paragraph{Estimating error probabilities}
+From the positive and negative controls, we can  estimate the error
+probabilities $\alpha$ and $\beta$.
+The type I error $\alpha$ is the number of positive controls discretized to state \texttt{1},
+and the type II error $\beta$ is the number of negative controls in state \texttt{0}.
+To guard against unrealistically low estimates we add pseudo counts.
+The error estimates are included into the discretization results:
+<<>>=
+res.disc$para
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage\section{Applying Nested Effects Models}
+
+Which model explains the data best?  With only four S-genes, we can exhaustively enumerate all 
+pathway models and search the whole space for the best-fitting model.
+To score these models use either the marginal likelihood depending on $\alpha$
+and $\beta$ (details found in Markowetz \emph{et al}. (2005)) or the full
+marginal likelihood depending on hyperparameters (details in \cite{Markowetz2006Thesis}). 
+
+In cases, where
+exhaustive search over model space is infeasible (i.e. when we have
+more than 4 or 5 perturbed genes) several heuristics have been developed and integrated into the \emph{nem} package:
+\begin{itemize}
+\item edge-wise and triplets learning \cite{Markowetz2007}
+\item greedy hillclimbing
+\item module networks \cite{Frohlich2007RNAiBMC, Frohlich2008NEMsBioinformatics}
+\item alternating MAP optimization \cite{Tresch2008NEMs}
+\end{itemize}
+An interface to all inference techniques is provided by the function \texttt{nem}.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Exhaustive search by marginal likelihood}
+
+Scoring models by marginal log-likelihood is implemented in function
+\texttt{score}.  Input consists of models, data and the type of the score
+(\texttt{"mLL"}, \texttt{"FULLmLL"}, \texttt{"CONTmLL"}, \texttt{"CONTmLLBayes"}, \texttt{"CONTmLLMAP"}). Furthermore, there are several additional options, which allow you to specify parameters, priors for the network structure and for the position of E-genes, and so on. The score types \texttt{"mLL"} and \texttt{"FULLmLL"} refer to discretized data, which we use in this example. The score types \texttt{"CONTmLL"}, \texttt{"CONTmLLBayes"}, \texttt{"CONTmLLMAP"} are discussed in Section \ref{sub:disc_omitted}. With type \texttt{"mLL"} we need to pass error probabilities $alpha$ and $beta$ in the argument \texttt{para}. Since version 1.5.4 all parameters are summarized in one hyperparameter, which is passed to the main function \texttt{nem}. For convenience a function \texttt{set.default.parameters} has been introduced, which allows to change specific parameters, while all others are set to default values.
+<<>>=
+hyper = set.default.parameters(unique(colnames(res.disc$dat)), para=res.disc$para)
+result <- nem(res.disc$dat,inference="search",control=hyper, verbose=FALSE)
+result
+@
+The output contains the highest scoring model (\texttt{result\$graph}), a vector of scores (\texttt{result\$mLL}) and a list of
+E-gene position posteriors (\texttt{result\$pos}), and a MAP estimate of E-gene
+positions (\texttt{result\$mappos}). 
+We can plot the results using the commands:
+<<results=hide>>=
+plot.nem(result,what="graph")
+plot.nem(result,what="mLL")
+plot.nem(result,what="pos")
+@
+%--- plotting the graph
+<<echo=FALSE,results=hide>>=
+Sgenes <- unique(colnames(res.disc$dat))
+models <- enumerate.models(Sgenes)
+best5 <- -sort(-unique(result$mLL))[1:5]
+col<-c("yellow","yellow","green","blue")
+names(col) = Sgenes
+library(Rgraphviz)
+for (i in 1:5) {
+   graph <- as(models[[which(result$mLL == best5[i])[1]]]-diag(4),"graphNEL")
+   pdf(file=paste("topo",i,".pdf",sep=""))
+   par(cex.main=5)
+   plot(graph,
+        nodeAttrs=list(fillcolor=col),
+        main=paste("-",i, "-"))        
+   dev.off()
+   }
+@
+\begin{figure}[ht]
+\begin{center}
+\framebox{\includegraphics[width=.18\textwidth]{topo1}}
+\hfill
+\includegraphics[width=.18\textwidth]{topo2}
+\includegraphics[width=.18\textwidth]{topo3}
+\includegraphics[width=.18\textwidth]{topo4}
+\includegraphics[width=.18\textwidth]{topo5}
+\end{center}
+\caption{\label{topologies}The five silencing schemes getting high scores in Fig.~\ref{scores1}. It takes a second to see it, but Nr.2 to 5 are not that different from Nr.1. The main feature, ie. the branching downstream of \gene{tak} is conserved in all of them.}
+\end{figure}
+%--- plotting the scores
+\myincfig{.4}{
+<<label=scores1,fig=TRUE,echo=FALSE,results=hide>>=
+plot.nem(result,what="mLL")
+@
+}
+{scores1}{The best 30 scores}
+%--- plotting the posterior positions
+\myincfig{.4}{
+<<label=pos1,fig=TRUE,echo=FALSE,results=hide,width=5,height=13>>=
+plot.nem(result,what="pos")
+@
+}
+{Egene_positions}{Posterior distributions of E-gene positions given
+the highest scoring silencing scheme (Nr. 1 in Fig.~\ref{topologies}). The MAP estimate
+corresponds to the row-wise maximum.}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Exhaustive search Full marginal likelihood}
+Additionally to what we did in the paper \cite{Markowetz2005Inference}
+the PhD thesis \cite{Markowetz2006Thesis} contains equations for a ``full marginal
+likelihood'' in which error probabilities $\alpha$ and $\beta$ are integrated
+out. This section shows that using this score we learn the same pathways as
+before.
+<<>>=
+hyper$type="FULLmLL"
+hyper$hyperpara=c(1,9,9,1)
+result2 <- nem(res.disc$dat,inference="search",control=hyper,verbose=FALSE)
+result2
+@
+%--- plotting the graphs
+<<echo=FALSE,results=hide>>=
+best5 <- -sort(-unique(result2$mLL))[1:5]
+for (i in 1:5) {
+   graph <- as(models[[which(result2$mLL == best5[i])[1]]]-diag(4),"graphNEL")
+   pdf(file=paste("topo2",i,".pdf",sep=""))
+   par(cex.main=5)
+   plot(graph,
+        nodeAttrs=list(fillcolor=col),
+        main=paste("-",i, "-"))
+   dev.off()
+   }
+@
+\begin{figure}[ht]
+\begin{center}
+\framebox{\includegraphics[width=.18\textwidth]{topo21}}
+\hfill
+\includegraphics[width=.18\textwidth]{topo22}
+\includegraphics[width=.18\textwidth]{topo23}
+\includegraphics[width=.18\textwidth]{topo24}
+\includegraphics[width=.18\textwidth]{topo25}
+\end{center}
+\caption{\label{topologies2}Same topologies as before.}
+\end{figure}
+%--- plotting the scores
+\myincfig{.4}{
+<<label=scores2,fig=TRUE,echo=FALSE,results=hide>>=
+plot.nem(result2,what="mLL")
+@
+}
+{scores2}{The best 30 scores by full marginal likelihood}
+%--- plotting the posterior positions
+\myincfig{.4}{
+<<label=pos2,fig=TRUE,echo=FALSE,results=hide,width=5,height=13>>=
+plot.nem(result2,what="pos")
+@
+}
+{Egene_positions2}{Posterior distributions of E-gene positions given
+the highest scoring silencing scheme (Nr. 1 in Fig.~\ref{topologies2}). The MAP estimate
+corresponds to the row-wise maximum.}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Edge-wise learning}
+
+Instead of scoring whole pathways, we can learn the model edge by edge \cite{Markowetz2007}.
+For each pair of genes $A$ and $B$ we infer the best of four possible models:
+$A \cdot \cdot B$ (unconnected),
+$A \rightarrow B$ (effects of A are superset of effects of B),
+$A \leftarrow B$ (subset), and
+$A \leftrightarrow B$ (undistinguishable effects).
+<<>>=
+resultPairs <- nem(res.disc$dat,inference="pairwise",control=hyper, verbose=FALSE)
+resultPairs
+@
+\myincfig{.3}{
+<<label=graph3,fig=TRUE,echo=FALSE>>=
+col<-c("yellow","yellow","green","blue")
+names(col) = nodes(resultPairs$graph)
+plot.nem(resultPairs, nodeAttrs=list(fillcolor=col), SCC=FALSE)
+@
+}{graph3}{Result of edge-wise learning. Compare this to the result from global search. It looks exactely the same.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Inference from triples}
+
+Edge-wise learning assumes independence of edges. But this is not true in transitively closed graphs, where a direct edge must exist whenever there is a longer path between two nodes.
+Natural extension of edge-wise learning is inference from triples of nodes \cite{Markowetz2007}.
+In the package \texttt{nem} we do it by
+<<>>=
+resultTriples <- nem(res.disc$dat,inference="triples",control=hyper, verbose=FALSE)
+resultTriples
+@
+\myincfig{.3}{
+<<label=graph4,fig=TRUE,echo=FALSE>>=
+col<-c("yellow","yellow","green","blue")
+names(col) = nodes(resultTriples$graph)
+plot.nem(resultTriples, nodeAttrs=list(fillcolor=col), SCC=FALSE)
+@
+}{graph4}{Result of triple learning. Compare this to the result from global search and pairwise learning}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Inference with greedy hillclimbing}
+
+Greedy hillclimbing is a general search and optimization strategy known from the literature \cite{RusNor95}. Given an initial network hypothesis (usually an empty graph) we want to arrive at a local maximum of the likelihood function by successively adding that edge, which adds the most benefit to the current network's likelihood. This procedure is continued until no improving edge can be found any more.
+<<>>=
+resultGreedy <- nem(res.disc$dat,inference="nem.greedy",control=hyper, verbose=FALSE)
+resultGreedy
+@
+\myincfig{.3}{
+<<label=graph44,fig=TRUE,echo=FALSE,results=hide>>=
+col<-c("yellow","yellow","green","blue")
+names(col) = nodes(resultGreedy$graph)
+plot.nem(resultGreedy, nodeAttrs=list(fillcolor=col), SCC=FALSE)
+@
+}{graph44}{Result of greedy hillclimbing. It is exactly the same as for the exhaustive search.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Inference with module networks}
+
+Rather than looking for a complete network hypothesis at once the
+idea of the module network is to build up a graph from smaller subgraphs,
+called \emph{modules} in the following \cite{Frohlich2007RNAiBMC, Frohlich2008NEMsBioinformatics}. The module network is thus
+a divide and conquer approach: We first perform a hierarchical clustering
+of the preprocessed expression profiles of all S-genes, e.g. via average linkage. The
+idea is that S-genes with a similar E-gene response profile should be close in the signaling
+path. We now successively move down the cluster tree hierarchy until we find a cluster with 
+only 4 S-genes at most. Figure \ref{fig:MNIdea} illustrates the idea with an assumed network of 10 S-genes.
+At the beginning we find $S_8$ as a cluster singleton. Then by successively moving down the hierarchy we identify 
+clusters $S_6, S_7, S_1, S_10$, $S_3, S_2, S_5$ and $S_4, S_9$. All these clusters (modules) contain 4 S-genes at most and can 
+thus be estimated by taking the highest scoring of all possible network hypotheses. 
+
+\begin{figure}
+\includegraphics[scale=0.5]{ModuleNetworks1}
+
+\caption{\label{fig:MNIdea} Basic idea of module networks: By successively moving down the cluster hierarchy we identify the clusters (modules) of S-genes, which are marked in red. They contain 4 S-genes at most and can be estimated via exhaustive search.}
+\end{figure}
+
+Once all modules have been estimated their connections are constructed. For this purpose two different approaches have been proposed:
+\begin{itemize}
+\item In the original publication \cite{Frohlich2007RNAiBMC} pairs of modules are connected ignoring the rest of the network. That means between a pair of modules all (at most 4096) connection possibilities going from nodes in the first to nodes in the second module are tested. The connection model with highest likelihood is kept. This approach does not guarantee to reach a local maximum of the complete network, but only needs $O(|S-genes|^2)$ likelihood evaluations. 
+\item In \cite{Frohlich2008NEMsBioinformatics} a constraint greedy hill-climber is proposed: We successively add that edge between any pair of S-genes being contained in different modules, which increases the likelihood of the complete network most. This procedure is continued until no improvement can be gained any more, i.e. we have reached a local maximum of the likelihood function for the complete network.
+ \end{itemize}
+ 
+In the package \texttt{nem} we call the module network by
+<<eval=FALSE>>=
+resultMN <- nem(res.disc$dat,inference="ModuleNetwork",control=hyper, verbose=FALSE) # this will do exactly the same as the exhaustive search
+resultMN.orig <- nem(res.disc$dat,inference="ModuleNetwork.orig",control=hyper, verbose=FALSE) # this will do exactly the same as the exhaustive search
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Alternating optimization}
+
+The alternating optimization scheme was proposed in \cite{Tresch2008NEMs}. In contrast to the original approach by Markowetz et al. \cite{Markowetz2005Inference} there is a MAP estimate of the linking positions of E-genes to S-genes. The algorithm works as follows: Starting with an initial estimate of the linking of E-genes to S-genes from the data, we perform an alternating MAP optimization of the S-genes graph and the linking graph until convergence. As a final step we find a transitively closed graph most similar to the one resulting from the alternating optimization.
+<<>>=
+resGreedyMAP <- nem(BoutrosRNAiLods, inference="nem.greedyMAP", control=hyper, verbose=FALSE)
+resGreedyMAP
+@
+\myincfig{.3}{
+<<label=graph55,fig=TRUE,echo=FALSE,results=hide>>=
+col<-c("yellow","yellow","green","blue")
+names(col) = nodes(resGreedyMAP$graph)
+plot.nem(resGreedyMAP, nodeAttrs=list(fillcolor=col), SCC=FALSE)
+@
+}{graph55}{Result of the alternating MAP optimization.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Incorporating prior Assumptions}
+
+\subsubsection{Regularization}
+
+The \texttt{nem} package allows to specify a prior on the network structure itself. 
+This can be thought of biasing the score
+of possible network hypotheses towards prior knowledge. It is crucial
+to understand that in principle in any inference scheme there exist
+two competing goals: Belief in prior assumptions / prior knowledge
+versus belief in data. Only trusting the data itself may lead to overfitting,
+whereas only trusting in prior assumptions does not give any new information
+and prevents learning. Therefore, we need a trade-off between both
+goals via a regularization constant $\lambda > 0$, which specifies the belief in our prior assumptions. In the simplest case our assumption could be that the true network structure is sparse, i.e. there are only very few edges. More complex priors could involve separate prior edge probabilities (c.f. \cite{Frohlich2007RNAiBMC, Frohlich2008NEMsBioinformatics}).
+<<>>=
+hyper$Pm = diag(4)
+hyper$lambda = 10
+resultRegularization <- nem(res.disc$dat, inference="search", control=hyper, verbose=FALSE)
+resultRegularization
+@
+\myincfig{.3}{
+<<label=graph6,fig=TRUE,echo=FALSE,results=hide>>=
+col<-c("yellow","yellow","green","blue")
+names(col) = nodes(resultRegularization$graph)
+plot.nem(resultRegularization, nodeAttrs=list(fillcolor=col), SCC=FALSE)
+@
+}{graph6}{Result of module network learning with regularization towards sparse graph structures ($\lambda=10$).}
+
+
+In practice we would like to choose a $\lambda$ in an automated fashion.
+This leads to an instance of the classical \emph{model selection}
+problem (e.g. \cite{HastieTibshiraniBook2001}) in statistical learning.
+One way of dealing with it is to tune $\lambda$ such that the \emph{Bayesian 
+information criterion} (BIC)
+\begin{equation}
+BIC(\lambda,\Phi_{opt})=-2\log P(D|\Phi_{opt})+\log(n)d(\lambda,\Phi_{opt})
+\end{equation}
+becomes minimal \cite{HastieTibshiraniBook2001}. Here $d(\lambda,\Phi_{opt})$
+denotes the number of parameters in the highest scoring 
+network structure $\Phi_{opt}$ haven $n$ S-genes. Here the number of parameters is estimated as:
+\begin{equation}
+d(\lambda,\Phi) = \sum_{i,j} 1_{|\Phi_{ij} - \hat{\Phi}_{ij}| > 0}
+\end{equation}
+where $\hat{\Phi}$ is the prior network.
+<<>>=
+resultModsel <- nemModelSelection(c(0.01,1,100),res.disc$dat, control=hyper,verbose=FALSE)
+@
+
+
+\myincfig{.3}{
+<<label=graph7,fig=TRUE,echo=FALSE,results=hide>>=
+col<-c("yellow","yellow","green","blue")
+names(col) = nodes(resultModsel$graph)
+plot.nem(resultModsel, nodeAttrs=list(fillcolor=col), SCC=FALSE)
+@
+}{graph7}{Result of module network learning with regularization towards sparse graph structures and automatic model selection.}
+
+
+\subsubsection{Bayesian Model Selection}
+
+Searching for an optimal regularization constant relates to a frequentistic point of view to incorporate prior knowledge. Instead, from a Bayesian perspective one should define a prior on the regularization parameter and integrate it out. Here, this is done by assuming an inverse gamma distribution prior on $\nu=\frac{1}{2\lambda}$ with hyperparameters $1,0.5$, which leads to a simple closed form of the full prior \cite{Frohlich2008NEMsBioinformatics}. An advantage of the Bayesian perspective is that no explicit model selection step is needed. Furthermore, there is evidence, that compared to the frequentistic method the Bayesian approach using the same amount of prior knowledge yields a higher increase of the reconstructed network's sensitivity 
+<<>>=
+hyper$lambda=0	# set regularization parameter to 0
+hyper$Pm	# this is our prior graph structure
+resultBayes <- nem(res.disc$dat, control=hyper, verbose=FALSE) # now we use Bayesian model selection to incorporate the prior information
+resultBayes
+@
+\myincfig{.3}{
+<<label=graph77,fig=TRUE,echo=FALSE,results=hide>>=
+col<-c("yellow","yellow","green","blue")
+names(col) = nodes(resultBayes$graph)
+plot.nem(resultBayes, nodeAttrs=list(fillcolor=col), SCC=FALSE)
+@
+}{graph77}{Result of module network learning with a Bayesian network prior favoring sparse graphs.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Omitting the Data Discretization Step \label{sub:disc_omitted}}
+
+In general, performing a data discretization on the expression profiles as described in Sec. \ref{preprocess} can be critical, especially, if not both, positive and negative controls are available. An alternative is given by taking the 
+raw $p$-value profiles obtained from testing for differential gene expression. In this situation we assume the individual $p$-values in the data matrix to be drawn from a mixture of a uniform, a Beta$(1,\beta)$ and a Beta$(\alpha,1)$ distribution. The parameters of the distribution are fitted via an EM algorithm \cite{Frohlich2008NEMsBioinformatics}. The \texttt{nem} package supports such a data format using the options \texttt{type = "CONTmLLBayes"} and  \texttt{type = "CONTmLLMAP"} in the call of the function \texttt{nem}. Moreover there is a function \texttt{getDensityMatrix}, which conveniently does all the fitting of the $p$-value densities and produces diagnostic plots into a user specified directory. We always recommend to use the full microarray without any filtering for fitting the $p$-value densities, since filtering could destroy the supposed form of the $p$-value distributions.
+
+An alternative to the $p$-value density (which we do not recommend here from our practical experience), is to use log-odds (B-values), which compare the likelihood of differential expression with the likelihood of non-differential expression of a gene. B-values can be used in the \texttt{nem} package in the same way as (log) $p$-value densities. The inference scheme \texttt{type = "CONTmLLBayes"} corresponds to the original one in \cite{Markowetz2005Inference}, where linkage positions of E-genes to S-genes are integrated out. The inference scheme \texttt{type = "CONTmLLMAP"} was proposed in \cite{Tresch2008NEMs}, where we have a MAP estimate of linkage positions.
+
+A further possibility to omit the data discretization step is to calculate the effect probability for each gene based on given the empirical distributions of the controls. Note that for this purpose both, positive and negative controls should be available.
+<<eval=FALSE>>=
+logdensities = getDensityMatrix(myPValueMatrix,dirname="DiagnosticPlots")
+nem(logdensities[res.disc$sel,],type="CONTmLLBayes",inference="search")
+nem(logdensities[res.disc$sel,],type="CONTmLLMAP",inference="search")
+
+preprocessed <- nem.cont.preprocess(BoutrosRNAiExpression,neg.control=1:4,pos.control=5:8)
+nem(preprocessed$prob.influenced,type="CONTmLL",inference="search")
+@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Selection of E-Genes}
+
+There exists two mechanisms to select E-genes implemented in \texttt{nem}, which can be used complementary to each other \cite{Frohlich2009NEMComplete}: 
+\begin{itemize}
+\item A-priori filtering of E-genes, which show a pattern of differential expression, which can be expected to be non-random
+\item Automated subset selection of most relevant E-genes within the network estimation procedure. 
+\end{itemize}
+Automated subset selection of most relevant E-genes works as follows: A virtual "null" S-gene is used, to which E-genes are assigned, that are irrelevant. The prior probability for assigning an E-gene to the "null" S-genes is $\frac{\delta}{n}$, where $\delta>0$ and $n$ is the number of S-genes + 1. Since version > 2.18.0 E-gene selection is done per default. The parameter $\delta$ can optionally be tuned via the BIC model selection criterion.
+
+For a given network hypothesis we can also check, which E-Genes had the highest positive contribution to the network hypothesis.
+<<eval=FALSE>>=
+mydat = filterEGenes(Porig, logdensities) # a-priori filtering of E-genes
+
+hyper$selEGenes = TRUE
+hyper$type = "CONTmLLBayes"
+resAuto = nem(mydat,control=hyper) # use filtered data to estimate a network; perform automated subset selection of E-genes with tuning of the parameter delta
+
+most.relevant = getRelevantEGenes(as(resAuto$graph, "matrix"), mydat)$selected # returns all E-genes with partial log-likelihood > 0.
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Statistical Stability and Significance}
+
+An important step after network inference is some kind of validation. In abscence of the true network this step is rather difficult. We have implemented several possible tests, which may also be used in addition to each other \cite{Frohlich2009NEMComplete}: 
+\begin{itemize}
+\item Statistical significance: Possibly the least demand we have for our inferred network is, that it should be significantly superior to a random one. We sample $N$ (default 1000) random networks from a null distribution and compare their marginal posterior likelihood to that of the estimated network. The fraction of how often a random network is better than the inferred one yields an exact p-value. An alternative to draw completely random networks, is to permute the node labels of the inferred network. This yields a degree distribution, which is always the same as in the inferred network.
+\item Bootstrapping: We wish our network to be stable against small changes in our set of E-genes. Therefore, we use bootstrapping: We sample $m$ E-genes with replacement for $N$ times (default 1000) and run the network inference on each bootstrap sample. At the end we count for each edge how often it was inferred in all $N$ bootstrap runs. This yields a probability for each edge. We then may only consider edges with a probability above some threshold (e.g. 50%).
+\item Jackknife: We also wish the rest of our network to be stable against removal of S-genes. Therefore, we use the jackknife: Each S-gene is left out once and the network inference run on the other S-genes. At the end we count for each edge, how often it was inferred. This yields a jackknife probability for each edge, which then may be used to filter edges.
+\item Consensus models: We perform both, bootstrapping and jackknife. At the end we then only keep edges appearing more frequently than some threshold in BOTH procedures.
+\end{itemize}
+<<eval=FALSE>>=
+significance=nem.calcSignificance(disc$dat,res) # assess statistical significance
+bootres=nem.bootstrap(res.disc$dat) # bootstrapping on E-genes
+jackres=nem.jackknife(res.disc$dat) # jackknife on S-genes
+consens=nem.consensus(res.disc$dat) # bootstrap & jackknife on S-genes
+@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Nested Effects Models as Bayesian Networks}
+
+Recently it has been shown that under certain assumptions (e.g. acyclicity of the network graph) NEMs can be interpreted in the context of Bayesian networks \cite{Zeller2008NEMsBN}. This interpretation gives rise to a different formulation of NEMs, which is also accessible within the \texttt{nem} package.
+<<>>=
+hyper$mode="binary_Bayesian"
+resultBN = nem(res.disc$dat, inference="BN.greedy", control=hyper)
+@
+\myincfig{.3}{
+<<label=graph8,fig=TRUE,echo=FALSE,results=hide>>=
+col<-c("yellow","yellow","green","blue")
+names(col) = nodes(resultBN$graph)
+plot.nem(resultBN, nodeAttrs=list(fillcolor=col), SCC=FALSE)
+@
+}{graph8}{Result of Bayesian network learning}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{MC EMiNEM - Learning NEMs via Expectation Maximization and MCMC}
+In \cite{Niederberger2012} an Expectation Maximization (EM) coupled with a Markov Chain Monte Carlo (MCMC) sampling strategy is proposed. More specifically, a MCMC algorithm (called MCEMiNEM) is used to sample from the distribution of all EM solutions, hence avoiding local optima. MCEMiNEM can be used via:  
+<<>>=
+hyper$mcmc.nburnin = 10 # much to few in practice
+hyper$mcmc.nsamples = 100  
+hyper$type = "CONTmLLDens"
+hyper$Pm = NULL
+resulteminem = nem(BoutrosRNAiLods, inference="mc.eminem", control=hyper)
+@
+\myincfig{.3}{
+<<label=graph8,fig=TRUE,echo=FALSE,results=hide>>=
+col<-c("yellow","yellow","green","blue")
+names(col) = nodes(resultBN$graph)
+plot.nem(resulteminem, nodeAttrs=list(fillcolor=col), SCC=FALSE)
+@
+}{graphMCEMiNEM}{Result of Bayesian network learning}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Dynamic Nested Effects Models}
+
+In \cite{Anchang2009} the authors describe a first extension of NEMs to time series perturbation data. That means after each perturbation gene expression is measured at several time points. The model, called D-NEMs was successfully applied to reverse engineer parts of a transcriptional network steering murine stem cell development \cite{Ivanova2006}. A second model for the same purpose was proposed in \cite{Frohlich2011}. Due to the employed likelihood model a highly efficient computation is possible here. It is thus particularly well suited for real world applications and included in to the \texttt{nem} package. In addition to the original greedy algorithm used in \cite{Froehlich2011}, we here provide a Markov Chain Monte Carlo (MCMC) algorithm for structure learning. It includes a Bayesian way of including prior knowledge by drawing the weight of the structure prior (parameter lambda) itself from an exponential distribution.
+<<eval=FALSE>>=
+data("Ivanova2006RNAiTimeSeries")
+dim(dat)
+control = set.default.parameters(dimnames(dat)[[3]], para=c(0.1,0.1))
+net = nem(dat, inference="dynoNEM", control=control)
+plot.nem(net, SCC=FALSE, plot.probs=TRUE)
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Deterministic Effects Propagation Networks}
+
+Deterministic Effects Propagation Networks (DEPNs) \cite{Frohlich2009DEPNs} go in another direction than NEMs and they are designed for a different scenario: The basic assumption is that we measure an unknown signaling network of proteins by performing multiple interventions. These perturbations may affect single proteins at a time or may also be combinatorial, i.e. they affect several proteins at one time. For each protein in the network we monitor the effect of all interventions, typically via Reverse Phase Protein Arrays. Note that each specific intervention not only influences direct targets, but may also cause effects on downstream proteins. We explicitly assume that in one experiment all proteins are unperturbed (e.g. the cells are transfected only with transfection reagent) . 
+
+DEPNs infer the most likely protein signaling network given measurements from multiple interventions along a time course. In principle, the model works also with only one or a few time points, although accuracy gets higher with more time points. Moreover, DEPNs can deal with latent network nodes (proteins without measurements) and with missing data. Briefly, the idea is that we have an unknown network graph, where each node can have two states: perturbed or unperturbed. Furthermore, attached to each node we have experimental measurements, which are assumed to come from a Gaussian distribution. The exact form of this distribution depends on the perturbation state of the node (i.e. whether the protein is perturbed or not) and on the time point of measurement. 
+
+Given a network hypothesis we can calculate the expected direct and indirect effects of a perturbation experiment.
+We should repeat at this point that we assume to have one control experiment, where all nodes are known to be unperturbed. Hence, we observe measurements for each node in the network in the perturbed and the unperturbed state for each time point. With this information we can estimate the conditional Gaussian distributions attached to each node and finally the probability of observing the data under the given network hypothesis.
+
+
+DEPNs are accessible within the \texttt{nem} package since version 1.5.4:
+<<eval=FALSE>>=
+data(SahinRNAi2008)
+control = set.default.parameters(setdiff(colnames(dat.normalized),"time"), map=map.int2node, type="depn",debug=FALSE) # set mapping of interventions to perturbed nodes
+net = nem(dat.normalized, control=control) # greedy hillclimber to find most probable network structure
+@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Infering Edge Directions}
+
+It may be interesting to infer edge types (up-regulation, down-regulation) for a given nem model. For an edge a->b we look, whether b goes up or down, if a is perturbed. If it goes up, an inhibition is assumed, otherwise an activation.
+
+<<fig=FALSE>>=
+resEdgeInf = infer.edge.type(result, BoutrosRNAiLogFC)
+plot.nem(resEdgeInf, SCC=FALSE)
+@
+
+\myincfig{.3}{
+<<label=graph100,fig=TRUE,echo=FALSE>>=
+col<-c("yellow","yellow","green","blue")
+names(col) = nodes(resEdgeInf$graph)
+plot.nem(resEdgeInf, nodeAttrs=list(fillcolor=col), SCC=FALSE)
+@
+}{graph100}{Inferred edge types: blue = inhibition, red = activation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\section{Visualization}
+<<results=hide,fig=FALSE>>=
+plotEffects(res.disc$dat,result)
+@
+
+\myincfig{.4}{
+<<label=plot_effects,fig=TRUE,echo=FALSE,results=hide,width=5,height=13>>=
+plotEffects(res.disc$dat,result)
+@
+}{plot_effects}{plotting data according to inferred hierarchy}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\section{Post-processing of results}
+
+
+\paragraph{Combining strongly connected components}
+First, we identify all nodes/genes which are not distinguishable given the data.
+This amounts to finding the strongly connected components in the graph. Relish
+and Key are now combined into one node.
+
+
+<<fig=FALSE>>=
+result.scc <- SCCgraph(result$graph,name=TRUE)
+plot(result.scc$graph)
+@
+
+\myincfig{.3}{
+<<label=scc,fig=TRUE,echo=FALSE,results=hide>>=
+# col2<-c("yellow","blue","green")
+# names(col2) = nodes(result.scc$graph)
+plot(result.scc$graph)#,nodeAttrs=list(fillcolor=col2))
+@
+}{scc}{The undistinguishable profiles of \gene{key} and \gene{rel} are summarized into a single node.}
+
+
+\paragraph{Transitive reduction}
+Additionally, in bigger graphs \texttt{transitive.reduction} helps to see the
+structure of the network better. In this simple example there are no shortcuts to remove.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+
+\bibliographystyle{abbrv}
+\bibliography{references}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Session Information}
+
+The version number of R and packages loaded for generating the vignette were:
+
+
+<<echo=FALSE,results=tex>>=
+toLatex(sessionInfo())
+@
+
+
+\end{document}
+
+%
+%   end of file
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
