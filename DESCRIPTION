@@ -3,7 +3,7 @@ Title: (Dynamic) Nested Effects Models and Deterministic Effects
         Propagation Networks to reconstruct phenotypic hierarchies
 Version: 2.46.0
 Author: Sumana Srivatsa, Niko Beerenwinkel
-Description: The package ‘pcnem’ allows to reconstruct networks from combinatorial perturbations by modelling perturbations probabilistically. It takes as input (1.) a set of pathway components, which were perturbed, (2.) a probabilistic perturbation map defining the probabilities of perturbing each component, and (3.) phenotypic readout of these perturbations (e.g. gene expression, protein expression). The output is a directed acyclic graph representing the phenotypic hierarchy.
+Description: The package 'nem' allows to reconstruct features of pathways from the nested structure of perturbation effects. It takes as input (1.) a set of pathway components, which were perturbed, and (2.) phenotypic readout of these perturbations (e.g. gene expression, protein expression). The output is a directed graph representing the phenotypic hierarchy.
 Maintainer: Sumana Srivatsa <sumana.srivatsa@bsse.ethz.ch>
 Depends: R (>= 3.0)
 Enhances: doMC, snow, parallel
