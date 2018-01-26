@@ -1,0 +1,5 @@
+Details on licenses as well as copyrights.
+
+In short:
+- The nem packages and its files are licenced under GPL-2
+- The scripts AdaSimulatedAnnealing.R, mLL.R, nem.R, score.R, pcNemFunctions.R, nem.bootstrap.R, and SearchNearestDAG.R were edited/added to the package

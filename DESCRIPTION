@@ -2,7 +2,7 @@ Package: pcnem
 Title: Probabilistic combinatorial nested effects model
 Version: 2.46.0
 Author: Sumana Srivatsa, Niko Beerenwinkel
-Description: The package ‘pcnem' probabilistically models combinatorial perturbations for reconstructing networks from perturbation data. It is built over as part of the R/Bioconductor package nem.
+Description: The package ‘pcnem' probabilistically models combinatorial perturbations for reconstructing networks from perturbation data. pc-NEM is implemented as part of the R/Bioconductor package nem.
 Reference: Srivatsa S, Kuipers J, Schmich F, Eicher S, Emmenlauer M,
         Dehio C, Beerenwinkel N: Improved pathway reconstruction from RNA
 	interference screens by exploiting off-target effects, Submitted,
