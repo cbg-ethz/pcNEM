@@ -1,14 +1,13 @@
 Package: pcnem
-Title: (Dynamic) Nested Effects Models and Deterministic Effects
-        Propagation Networks to reconstruct phenotypic hierarchies
+Title: Probabilistic combinatorial nested effects model
 Version: 2.46.0
-Author: Holger Froehlich, Florian Markowetz, Achim Tresch, Theresa Niederberger, Christian Bender, Matthias Maneck, Claudio Lottaz, Tim Beissbarth
-Description: The package 'nem' allows to reconstruct features of pathways from the nested structure of perturbation effects. It takes as input (1.) a set of pathway components, which were perturbed, and (2.) phenotypic readout of these perturbations (e.g. gene expression, protein expression). The output is a directed graph representing the phenotypic hierarchy.
-Reference: Froehlich H, Beissbarth T, Tresch A, Kostka D, Jacob J,
-        Spang R, Markowetz F: Analyzing gene perturbation screens with
-        nested effects models in R and bioconductor, Bioinformatics,
-        2008, 24:2549-50.
-Maintainer: Holger Froehlich <frohlich@bit.uni-bonn.de>
+Author: Sumana Srivatsa, Niko Beerenwinkel
+Description: The package ‘pcnem' probabilistically models combinatorial perturbations for reconstructing networks from perturbation data. It is built over as part of the R/Bioconductor package nem.
+Reference: Srivatsa S, Kuipers J, Schmich F, Eicher S, Emmenlauer M,
+        Dehio C, Beerenwinkel N: Improved pathway reconstruction from RNA
+interference screens by exploiting off-target effects, Submitted,
+        2017.
+Maintainer: Sumana Srivatsa <sumana.srivatsa@bsse.ethz.ch>
 Depends: R (>= 3.0)
 Enhances: doMC, snow, parallel
 Imports: boot, e1071, graph, graphics, grDevices, methods, RBGL (>=
