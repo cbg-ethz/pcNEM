@@ -4,6 +4,8 @@ for network reconstruction from combinatorial gene knockdown data. The model and
 
 #### Installation with devtools: ####
 
-`install.packages("devtools")` 
-`library(devtools) `
-`install_github("cbg-ethz/pcNEM")`
+```
+install.packages("devtools") 
+library(devtools) 
+install_github("cbg-ethz/pcNEM")
+```
