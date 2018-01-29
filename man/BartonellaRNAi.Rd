@@ -1,4 +1,4 @@
-\name{BartonellaRNAi}
+\name{BartonellaRNAi2017}
 \alias{D}
 \alias{KOmap}
 \alias{siRNA_gene_Expts}
@@ -7,7 +7,7 @@
 \description{
   The dataset consists of binary data with 288 features and 35 experiments, a perturbation map for 35 experiments targetting 8 genes, and a dataframe of gene names corresponding to the siRNA IDS. 
 }
-\usage{data(BartonellaRNAi)}
+\usage{data(BartonellaRNAi2017)}
 \format{
   D: binary data matrix: 288 x 35\\
   KOmap: perturbation matrix:  35 x 8\\
@@ -48,9 +48,9 @@
   Lewis, B. P., Burge, C. B., and Bartel, D. P. (2005). Conserved seed pairing, often flanked by adenosines, indicates that thousands of human genes are microrna targets. cell, 120(1), 15–20.\\
   Smith, K., Li, Y., Piccinini, F., Csucs, G., Balazs, C., Bevilacqua, A., and Horvath, P. (2015). Cidre: an illumination-correction method for optical microscopy. Nature methods, 12(5), 404–406.\\
 }
-\seealso{\code{\link{BartonellaRNAi}}}
+\seealso{\code{\link{BartonellaRNAi2017}}}
 \examples{
-  data("BartonellaRNAi")
+  data("BartonellaRNAi2017")
   dim(D)          
 }
 \keyword{datasets}

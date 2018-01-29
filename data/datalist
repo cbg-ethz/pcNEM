@@ -1,4 +1,4 @@
-BartonellaRNAi: D KOmap siRNA_gene_Expts
+BartonellaRNAi2017: D KOmap siRNA_gene_Expts
 BoutrosRNAi2002: BoutrosRNAiDens BoutrosRNAiDiscrete BoutrosRNAiExpression BoutrosRNAiLods BoutrosRNAiLogFC
 Ivanova2006RNAiTimeSeries: dat
 NiederbergerMediator2012: NiederbergerMediatorLods NiederbergerMediatorLogFC NiederbergerMediatorPVals
