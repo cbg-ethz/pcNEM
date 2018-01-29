@@ -13,7 +13,6 @@ install_github("cbg-ethz/pcNEM")
 ```
 data("BartonellaRNAi")
 
-# Maximum likelihood estimate
 set.seed(456)
 
 # Setting all the control parameters
