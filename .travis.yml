@@ -32,6 +32,9 @@ env:
     - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
     - LINTR_COMMENT_BOT=false
 
+r_packages:
+  - devtools
+  
 addons:
     apt:
       packages:
