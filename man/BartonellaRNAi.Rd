@@ -51,6 +51,6 @@
 \seealso{\code{\link{BartonellaRNAi}}}
 \examples{
   data("BartonellaRNAi")
-  dim(dat)          
+  dim(D)          
 }
 \keyword{datasets}
