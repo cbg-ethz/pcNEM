@@ -2,3 +2,4 @@ BoutrosRNAi2002: BoutrosRNAiDens BoutrosRNAiDiscrete BoutrosRNAiExpression Boutr
 Ivanova2006RNAiTimeSeries: dat
 NiederbergerMediator2012: NiederbergerMediatorLods NiederbergerMediatorLogFC NiederbergerMediatorPVals
 SahinRNAi2008: dat.normalized dat.unnormalized
+BartonellaRNAi: D KOmap siRNA_gene_Expts
