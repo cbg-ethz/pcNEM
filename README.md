@@ -12,6 +12,7 @@ install_github("cbg-ethz/pcNEM")
 #### Running pc-NEM #### 
 ```
 data("BartonellaRNAi")
+
 # Maximum likelihood estimate
 set.seed(456)
 
