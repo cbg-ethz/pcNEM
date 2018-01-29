@@ -11,7 +11,7 @@ install_github("cbg-ethz/pcNEM")
 ```
 #### Running pc-NEM #### 
 ```
-data("BartonellaRNAi")
+data("BartonellaRNAi2017")
 
 set.seed(456)
 
