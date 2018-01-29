@@ -9,6 +9,7 @@ install.packages("devtools")
 library(devtools) 
 install_github("cbg-ethz/pcNEM")
 ```
+Running pc-NEM
 ```
 data("BartonellaRNAi")
 # Maximum likelihood estimate
