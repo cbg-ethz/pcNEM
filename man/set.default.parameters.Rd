@@ -35,7 +35,7 @@ Since version 2.5.4 functions in the nem package do not have any more a large am
   \item{nu.no\_intervention, lambda.no\_intervention}{The same parameters for unperturbed nodes. Default: nu.no\_intervention=0.95, lambda.no\_intervention=4}
   \item{df.intervention, scale.intervention}{For \code{depn}: The unknown variance sigma2 for perturbed nodes is supposed to be drawn from Inv-\eqn{\chi^2}(df.intervention, scale.intervention). Default: df.intervention=4.4, scale.intervention=4.4}
   \item{df.no\_intervention, scale.no\_intervention}{The same parameters for unperturbed nodes. Default: df.no\_intervention=4.4, scale.no\_intervention=0.023}
-  \item{map}{For \code{depn}: Mapping of interventions to network nodes. The format is a named list of strings with names being the interventions and entries being the network nodes. Default: Entries and names are the network nodes. }
+  \item{map}{For \code{depn}: Mapping of interventions to network nodes. The format is a named list of strings with names being the interventions and entries being the network nodes. In pc-NEM, this is called the perturbation map and is a matrix with interventions as rows and network nodes as columns. This matrix is a must for pc-NEM and each entry can take a value between 0 and 1.  Default: For \code{depn}, entries and names are the network nodes.}
   \item{outputdir}{Directory where to put diagnostic plots. Default: folder "QualityControl" in current working directory}
   \item{debug}{Print out or plot diagnostic information. Default: FALSE}
   \item{mc.cores}{number of cores to be used on a multicore processor. Default: 8}
@@ -47,6 +47,17 @@ Since version 2.5.4 functions in the nem package do not have any more a large am
   \item{eminem.sdVal}{positive number, between 1 and ncol(D)*(ncol(D)-1): number of edges to change in one MCMC step; see paper for the author's choice. Default: 1}
   \item{eminem.changeHfreq}{positive number, mcmc.nsamples must be a multiple: the Empirical Bayes step is performed every <changeHfreq> steps (see paper for the author's choice); set >= mcmc.nsamples (or leave to default) to exclude this step. Default: NULL}
   \item{prob.cutoff}{Only edges with probability > prob.cutoff are assumed to be present. Default: 0.5}
+  \item{pcombi}{Runs pc-NEM if set to \code{TRUE} and classical NEM if set to \code{FALSE} . Default: FALSE}
+  \item{iterations}{Number of iterations in adaptive simulated annealing. Default: 2e4}
+  \item{stepsave}{Adapting intervals in ASA. Default: 100}
+  \item{revallowed}{Binary variable with \code{1} for allowing reversal of edges in ASA. Default: 1}
+  \item{AcceptRate}{Ideal acceptance rate for ASA. Default: NULL}
+  \item{Temp}{Initial temperature for ASA. Default: 50}
+  \item{AdaptRate}{Adaptation rate for ASA. Default: 0.3}
+  \item{noiseEst}{Estimates noise parameters when set to \code{TRUE} in ASA. Default: TRUE}
+  \item{moveprobs}{The probabilities to switch between the two spaces of DAGs and error rates in ASA. Default: c(0.6,0.4)}
+  \item{moveprobsNoise}{The probabilities to alternate between the two error rate spaces in ASA. Default: c(0.5,0.5)}
+  \item{sigma}{Covariance matrix for the two error rates in ASA. Default: diag(x=1,2)/10)} 
  }
 }
 \value{
@@ -57,26 +68,27 @@ control = set.default.parameters(LETTERS[1:5], type="CONTmLLBayes", selEGenes=TR
 }
 \references{
 
-Markowetz, F.; Bloch, J. & Spang, R., Non-transcriptional Pathway Features Reconstructed from Secondary Effects of RNA interference. Bioinformatics, 2005, 21, 4026 - 4032\\
+Markowetz, F.; Bloch, J. & Spang, R., Non-transcriptional Pathway Features Reconstructed from Secondary Effects of RNA interference. Bioinformatics, 2005, 21, 4026 - 4032
 
-Markowetz, F.; Kostka, D.; Troyanskaya, O. & Spang, R., Nested Effects Models for High-dimensional Phenotyping Screens. Bioinformatics, 2007, 23, i305 - i312\\
+Markowetz, F.; Kostka, D.; Troyanskaya, O. & Spang, R., Nested Effects Models for High-dimensional Phenotyping Screens. Bioinformatics, 2007, 23, i305 - i312
 
-Fr\"ohlich, H.; Fellmann, M.; S\"ultmann, H.; Poustka, A. & Beissbarth, T. Large Scale Statistical Inference of Signaling Pathways from RNAi and Microarray Data. BMC Bioinformatics, 2007, 8, 386\\
+Fr\"ohlich, H.; Fellmann, M.; S\"ultmann, H.; Poustka, A. & Beissbarth, T. Large Scale Statistical Inference of Signaling Pathways from RNAi and Microarray Data. BMC Bioinformatics, 2007, 8, 386
 
-Fr\"ohlich, H.; Fellmann, M.; S\"ultmann, H.; Poustka, A. & Beissbarth, T. Estimating Large Scale Signaling Networks through Nested Effect Models with Intervention Effects from Microarray Data. Bioinformatics, 2008, 24, 2650-2656\\ 
+Fr\"ohlich, H.; Fellmann, M.; S\"ultmann, H.; Poustka, A. & Beissbarth, T. Estimating Large Scale Signaling Networks through Nested Effect Models with Intervention Effects from Microarray Data. Bioinformatics, 2008, 24, 2650-2656
 
-Tresch, A. & Markowetz, F., Structure Learning in Nested Effects Models Statistical Applications in Genetics and Molecular Biology, 2008, 7\\
+Tresch, A. & Markowetz, F., Structure Learning in Nested Effects Models Statistical Applications in Genetics and Molecular Biology, 2008, 7
 
-Zeller, C.; Fr\"ohlich, H. & Tresch, A., A Bayesian Network View on Nested Effects Models EURASIP Journal on Bioinformatics and Systems Biology, 2009, 195272\\
+Zeller, C.; Fr\"ohlich, H. & Tresch, A., A Bayesian Network View on Nested Effects Models EURASIP Journal on Bioinformatics and Systems Biology, 2009, 195272
 
-Fr\"ohlich, H.; Tresch, A. & Beissbarth, T., Nested Effects Models for Learning Signaling Networks from Perturbation Data. Biometrical Journal, 2009, 2, 304 - 323\\
+Fr\"ohlich, H.; Tresch, A. & Beissbarth, T., Nested Effects Models for Learning Signaling Networks from Perturbation Data. Biometrical Journal, 2009, 2, 304 - 323
 
-Fr\"ohlich, H.; Sahin, \"O.; Arlt, D.; Bender, C. & Beissbarth, T. Deterministic Effects Propagation Networks for Reconstructing Protein Signaling Networks from Multiple Interventions. BMC Bioinformatics, 2009, 10, 322\\
+Fr\"ohlich, H.; Sahin, \"O.; Arlt, D.; Bender, C. & Beissbarth, T. Deterministic Effects Propagation Networks for Reconstructing Protein Signaling Networks from Multiple Interventions. BMC Bioinformatics, 2009, 10, 322
 
-Fr\"ohlich, H.; Praveen, P. & Tresch, A., Fast and Efficient Dynamic Nested Effects Models. Bioinformatics, 2011, 27, 238-244\\
+Fr\"ohlich, H.; Praveen, P. & Tresch, A., Fast and Efficient Dynamic Nested Effects Models. Bioinformatics, 2011, 27, 238-244
 
 Niederberger, T.; Etzold, S.; Lidschreiber, M; Maier, K.; Martin, D.; Fr\"ohlich, H.; Cramer, P.; Tresch, A., MC Eminem Maps the Interaction Landscape of the Mediator, PLoS Comp. Biol., 2012, submitted. 
 
+Srivatsa S, Kuipers J, Schmich F, Eicher S, Emmenlauer M, Dehio C, Beerenwinkel N, Improved pathway reconstruction from RNA interference screens by exploiting off-target effects, ISMB, 2018
 }
 \author{Holger Froehlich}
 \keyword{graphs}
