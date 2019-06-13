@@ -9,7 +9,7 @@ set.default.parameters = function(Sgenes, ...){
 			mcmc.nsamples=1e6, mcmc.nburnin=1e6, mcmc.seed=1234, mcmc.hyperprior=1,
 			eminem.maxsteps=1000, eminem.sdVal=1, eminem.changeHfreq=NULL,
 			prob.cutoff=0.5,
-            pcombi=FALSE, iterations = 2e4, stepsave = 1e2, revallowed = 1,
+            pcombi=FALSE, temper = FALSE, iterations = 2e4, stepsave = 1e2, revallowed = 1,
             AcceptRate = NULL, Temp = 50, AdaptRate = 0.3, noiseEst = TRUE,
             moveprobs = c(0.6,0.4), moveprobsNoise = c(0.5,0.5),
             sigma = diag(x=1,2)/10)
