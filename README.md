@@ -23,9 +23,9 @@ pcnem_mle <- nem(D,inference="AdaSimAnneal",control=control,verbose=FALSE)
 #### pc-NEM parameters #### 
 You can tune several hyperparameters for your setting using the `set.default.parameters()` function.
 
-`pcombi` &:  Logical parameter set to TRUE for pc-NEM. Default set to FALSE. <br/>
-`temper` &:  Two different implementations of adaptive simulated annealing. FALSE corresponds to adaptation of temperatures at varying intervals but cooled at a fixed rate. TRUE corresponds to the scheme described in the paper. Both are very similar in performance. Default is set to FALSE.<br/>
-`iterations` &:  Number of iterations for adaptive simulated annealing (ASA). Deafult is 2e4.<br/>
+`pcombi` :  Logical parameter set to TRUE for pc-NEM. Default set to FALSE. <br/>
+`temper` :  Two different implementations of adaptive simulated annealing. FALSE corresponds to adaptation of temperatures at varying intervals but cooled at a fixed rate. TRUE corresponds to the scheme described in the paper. Both are very similar in performance. Default is set to FALSE.<br/>
+`iterations` :  Number of iterations for adaptive simulated annealing (ASA). Deafult is 2e4.<br/>
 `stepsave` : The length of intervals to adapt tempertature and noise. Default is 1e2.<br/>
 `revallowed` : Binary parameter for including reversal moves. Default allows reversals and is set to 1.<br/>
 `AcceptRate` : The ideal acceptance rate for ASA.  <br/>
