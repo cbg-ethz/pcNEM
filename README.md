@@ -32,6 +32,6 @@ You can tune several hyperparameters for your setting using the `set.default.par
 `Temp`  : Initial temperature. Default is 50. <br/>
 `AdaptRate` : Rate of adaptation of temperature. Default is 0.3.<br/>
 `noiseEst` : Binary parameter to include estimation of noise parameters. Default is TRUE. <br/>
-`moveprobs` : Probability of moving between DAG space and noise space if  _noiseEst_  = TRUE. Default = `c(0.6,0.4)`.<br/>
+`moveprobs` : Probability of moving between DAG space and noise space if  `noiseEst`  = TRUE. Default = `c(0.6,0.4)`.<br/>
 `moveprobsNoise` : Probability of moving between alpa and beta space for noise estimation. Default = `c(0.5,0.5)`. <br/>
 `sigma` : Initial covariance matrix for noise estimation.
