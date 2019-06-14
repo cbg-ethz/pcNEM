@@ -21,7 +21,7 @@ control$map <- as.matrix(KOmap)
 pcnem_mle <- nem(D,inference="AdaSimAnneal",control=control,verbose=FALSE)
 ```
 #### pc-NEM parameters #### 
-You can tune several hyperparameters using `set.default.parameters()` function for your setting.
+You can tune several hyperparameters for your setting using the `set.default.parameters()` function.
 
 `pcombi` :  Logical parameter set to TRUE for pc-NEM. Default set to FALSE. <br/>
 `temper` :  Two different implementations of adaptive simulated annealing. FALSE corresponds to adaptation of temperatures at varying intervals but cooled at a fixed rate. TRUE corresponds to the scheme described in the paper. Both are very similar in performance. Default is set to FALSE.<br/>
