@@ -1,6 +1,6 @@
 # pcNEM
 Probabilistic combinatorial nested effects model (pc-NEM), is a variant of NEM, which probabilistically models the perturbations 
-for network reconstruction from combinatorial gene knockdown data. The model and the inference algorithm are implemented as part of the R/Bioconductor package _nem_. 
+for network reconstruction from combinatorial gene knockdown data. The model and the inference algorithm are implemented as part of the R/Bioconductor package `nem`. 
 
 #### Installation with devtools ####
 
@@ -24,9 +24,9 @@ pcnem_mle <- nem(D,inference="AdaSimAnneal",control=control,verbose=FALSE)
 Once you set default parameters using _set.default.parameters()_ function, you can tune several hyperparameters for your setting.
 
 `pcombi` :  Logical parameter set to TRUE for pc-NEM. Default set to FALSE. <br/>
-`temper` :  Two different implementations of adaptive simulated annealing. FALSE corresponds to adaptation of temperatures at varying intervals but cooled at a fixed rate. TRUE corresponds to the scheme described in paper. Both are very similar in performance. Default is set to FALSE.<br/>
+`temper` :  Two different implementations of adaptive simulated annealing. FALSE corresponds to adaptation of temperatures at varying intervals but cooled at a fixed rate. TRUE corresponds to the scheme described in the paper. Both are very similar in performance. Default is set to FALSE.<br/>
 `iterations` :  Number of iterations for adaptive simulated annealing (ASA). Deafult is 2e4.<br/>
-`stepsave` : The length of interval to adapt tempertature and noise. Default is 1e2.<br/>
+`stepsave` : The length of intervals to adapt tempertature and noise. Default is 1e2.<br/>
 `revallowed` : Binary parameter for including reversal moves. Default allows reversals and is set to 1.<br/>
 `AcceptRate` : The ideal acceptance rate for ASA.  <br/>
 `Temp`  : Initial temperature. Default is 50. <br/>
@@ -34,4 +34,4 @@ Once you set default parameters using _set.default.parameters()_ function, you c
 `noiseEst` : Binary parameter to include estimation of noise parameters. Default is TRUE. <br/>
 `moveprobs` : Probability of moving between DAG space and noise space if  _noiseEst_  = TRUE. Default = c(0.6,0.4).<br/>
 `moveprobsNoise` : Probability of moving between alpa and beta space for noise estimation. Default = c(0.5,0.5). <br/>
-`sigma` : Initial covariance matrix for noise estimation. Default = diag(x=1,2)/10)
+`sigma` : Initial covariance matrix for noise estimation. Default = diag(x=1,2)/10).
