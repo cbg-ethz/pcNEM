@@ -21,7 +21,7 @@ control$map <- as.matrix(KOmap)
 pcnem_mle   <- nem(D,inference="AdaSimAnneal",control=control,verbose=FALSE)
 ```
 #### pc-NEM parameters #### 
-You can tune several hyperparameters for your setting using the `set.default.parameters()` function.
+You can tune several hyperparameters for your case using the `set.default.parameters()` function.
 
 `pcombi` :  Logical parameter set to TRUE for pc-NEM. Default set to FALSE. <br/>
 `temper` :  Binary parameter to choose between two variant implementations of adaptive simulated annealing. FALSE corresponds to adaptation of temperatures at varying intervals but cooled at a fixed rate. TRUE corresponds to the scheme described in the paper. Both are very similar in performance. Default is set to FALSE.<br/>
@@ -35,3 +35,8 @@ You can tune several hyperparameters for your setting using the `set.default.par
 `moveprobs` : Probability of moving between DAG space and noise space if  `noiseEst`  = TRUE. Default = `c(0.6,0.4)`.<br/>
 `moveprobsNoise` : Probability of moving between alpa and beta space for noise estimation. Default = `c(0.5,0.5)`. <br/>
 `sigma` : Initial covariance matrix for noise estimation.
+
+#### Contact #### 
+Sumana Srivatsa
+sumana.srivatsa (at) bsse.ethz.ch
+
