@@ -10,7 +10,7 @@ library(devtools)
 install_github("cbg-ethz/pcNEM")
 ```
 #### Running pc-NEM #### 
-Small toy example with 6 S-genes, 6 experiments, and 90 E-genes. First, we sample a random network and then generate a perturbation map with on-target effects set to `0.8` and off-target effects set to `0.2`. Next, simulate data with using network and map and setting `$\alpha = 0.1$` and `$\beta = 0.08$`. Then use pc-nem to learn the network and noise parameters. 
+Small toy example with 6 S-genes, 6 experiments, and 90 E-genes. First, we sample a random network and then generate a perturbation map with on-target effects set to `0.8` and off-target effects set to `0.2`. Next, simulate data with using network and map and setting FPR = 0.05 and FNR = 0.01. Then use pc-nem to learn the network and noise parameters. 
 ```
 library(pcnem)
 library(Rgraphviz)
@@ -32,7 +32,7 @@ diag(KOmap)     <- 0.8
 # Off-target effects set to 0.2 in this example
 KOmap[sample(1:N^2, 4)] <- 0.2
 
-# Generating data with FPR and FNR 
+# Generating data
 alpha <- 0.05
 beta  <- 0.01
 D     <- pcnem:::sampleData.pcnem(Phi = Phi, M = M, map = KOmap, typeI.err = alpha, typeII.err = beta)$D
@@ -43,7 +43,7 @@ control$map        <- as.matrix(KOmap)
 control$iterations <- 10000
 control$temper     <- TRUE
 control$AcceptRate <- 0.1
-pcnem_mle          <- nem(D, inference = "AdaSimAnneal", control =control,verbose=FALSE)
+pcnem_mle          <- nem(D, inference = "AdaSimAnneal", control = control, verbose = FALSE)
 
 # True network likelihood
 control$para <- c(alpha,beta)
@@ -59,7 +59,7 @@ cat("Estimated type I error:", pcnem_mle$typeIEst, "\n")
 cat("Estimated type II error:", pcnem_mle$typeIIEst)
 
 ```
-The `$\beta$` is slightly underestimated due to finite sampling effect from small number of experiments and effects in this example. 
+The FNR is slightly underestimated due to finite sampling effect from small number of experiments and effects in this example. 
 
 #### pc-NEM parameters #### 
 You can tune several hyperparameters for your case using the `set.default.parameters()` function.
