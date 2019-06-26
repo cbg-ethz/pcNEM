@@ -2,14 +2,14 @@
 Probabilistic combinatorial nested effects model (pc-NEM), is a variant of NEM, which probabilistically models the perturbations 
 for network reconstruction from combinatorial gene knockdown data. The model and the inference algorithm are implemented as part of the R/Bioconductor package `nem`. 
 
-#### Installation with devtools ####
+### Installation with devtools ###
 
 ```
 install.packages("devtools") 
 library(devtools) 
 install_github("cbg-ethz/pcNEM")
 ```
-#### Running pc-NEM #### 
+### Running pc-NEM ### 
 Small toy example with 6 S-genes, 6 experiments, and 90 E-genes. First, we sample a random network and then generate a perturbation map with on-target probabilities set to `0.8` and off-target probabilities set to `0.2`. Next, simulate data with using network and map and setting FPR = 0.05 and FNR = 0.01. Then use pc-nem to learn the network and noise parameters. 
 ```
 library(pcnem)
@@ -24,7 +24,7 @@ Sgenes <- paste0("S", 1:N)
 Phi    <- pcnem:::sampleRndNetwork(Sgenes = Sgenes, trans.close = TRUE)
 
 # Generate knockout map with one experiment for each Sgene
-KOmap <- matrix(0, nrow = N, ncol = N )
+KOmap           <- matrix(0, nrow = N, ncol = N )
 rownames(KOmap) <- paste0("K", 1:N)
 colnames(KOmap) <- Sgenes
 # On target probabilities set to 0.8 in this example
@@ -61,7 +61,7 @@ cat("Estimated type II error:", pcnem_mle$typeIIEst)
 ```
 The FNR is slightly underestimated due to finite sampling effect from small number of experiments and effects in this example. 
 
-#### pc-NEM parameters #### 
+### pc-NEM parameters ###
 You can tune several hyperparameters for your case using the `set.default.parameters()` function.
 
 `pcombi` :  Logical parameter set to TRUE for pc-NEM. Default set to FALSE. <br/>
