@@ -36,7 +36,7 @@ You can tune several hyperparameters for your case using the `set.default.parame
 `moveprobsNoise` : Probability of moving between alpa and beta space for noise estimation. Default = `c(0.5,0.5)`. <br/>
 `sigma` : Initial covariance matrix for noise estimation.
 
-#### Contact #### 
-Sumana Srivatsa
+### Contact ### 
+Sumana Srivatsa <br/>
 sumana.srivatsa (at) bsse.ethz.ch
 
