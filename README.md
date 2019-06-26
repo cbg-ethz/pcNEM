@@ -35,3 +35,4 @@ You can tune several hyperparameters for your setting using the `set.default.par
 `moveprobs` : Probability of moving between DAG space and noise space if  `noiseEst`  = TRUE. Default = `c(0.6,0.4)`.<br/>
 `moveprobsNoise` : Probability of moving between alpa and beta space for noise estimation. Default = `c(0.5,0.5)`. <br/>
 `sigma` : Initial covariance matrix for noise estimation.
+
