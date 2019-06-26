@@ -10,7 +10,7 @@ library(devtools)
 install_github("cbg-ethz/pcNEM")
 ```
 #### Running pc-NEM #### 
-Small toy example with 6 S-genes, 6 experiments, and 90 E-genes. First, we sample a random network and then generate a perturbation map with on-target effects set to `0.8` and off-target effects set to `0.2`. Next, simulate data with using network and map and setting FPR = 0.05 and FNR = 0.01. Then use pc-nem to learn the network and noise parameters. 
+Small toy example with 6 S-genes, 6 experiments, and 90 E-genes. First, we sample a random network and then generate a perturbation map with on-target probabilities set to `0.8` and off-target probabilities set to `0.2`. Next, simulate data with using network and map and setting FPR = 0.05 and FNR = 0.01. Then use pc-nem to learn the network and noise parameters. 
 ```
 library(pcnem)
 library(Rgraphviz)
@@ -27,9 +27,9 @@ Phi    <- pcnem:::sampleRndNetwork(Sgenes = Sgenes, trans.close = TRUE)
 KOmap <- matrix(0, nrow = N, ncol = N )
 rownames(KOmap) <- paste0("K", 1:N)
 colnames(KOmap) <- Sgenes
-# On target effects set to 0.8 in this example
+# On target probabilities set to 0.8 in this example
 diag(KOmap)     <- 0.8
-# Off-target effects set to 0.2 in this example
+# Off-target probabilities set to 0.2 in this example
 KOmap[sample(1:N^2, 4)] <- 0.2
 
 # Generating data
