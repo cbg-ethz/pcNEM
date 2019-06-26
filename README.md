@@ -16,9 +16,9 @@ data("BartonellaRNAi2017")
 set.seed(456)
 
 # Setting all the control parameters
-control <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control     <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
 control$map <- as.matrix(KOmap)
-pcnem_mle <- nem(D,inference="AdaSimAnneal",control=control,verbose=FALSE)
+pcnem_mle   <- nem(D,inference="AdaSimAnneal",control=control,verbose=FALSE)
 ```
 #### pc-NEM parameters #### 
 You can tune several hyperparameters for your setting using the `set.default.parameters()` function.
