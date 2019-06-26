@@ -59,7 +59,7 @@ cat("Estimated type I error:", pcnem_mle$typeIEst, "\n")
 cat("Estimated type II error:", pcnem_mle$typeIIEst)
 
 ```
-The FNR is slightly underestimated due to finite sampling effect from small number of experiments and effects in this example. 
+The FNR is slightly underestimated due to finite sample size from small number of experiments and effects in this example. 
 
 ### pc-NEM parameters ###
 You can tune several hyperparameters for your case using the `set.default.parameters()` function.
