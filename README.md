@@ -10,7 +10,7 @@ library(devtools)
 install_github("cbg-ethz/pcNEM")
 ```
 ### Running pc-NEM ### 
-Small toy example with 6 S-genes, 6 knockdown experiments, and 90 E-genes. First, we sample a random network and then generate a perturbation map with on-target probabilities set to 0.8 and off-target probabilities set to 0.2. Next, we simulate data using the network and the perturbation map and setting FPR = 0.05 and FNR = 0.01. Then use pc-NEM to learn the network and noise parameters. 
+A small toy example with 6 S-genes, 6 knockdown experiments, and 90 E-genes. First, we sample a random network and then generate a perturbation map with on-target probabilities set to 0.8 and off-target probabilities set to 0.2. Next, we simulate data using the network and the perturbation map with FPR = 0.05 and FNR = 0.01. Once we have simulated the data, we use pc-NEM to learn the network and noise parameters. 
 ```
 library(pcnem)
 library(Rgraphviz)
