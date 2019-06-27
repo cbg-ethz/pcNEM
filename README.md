@@ -38,7 +38,7 @@ beta  <- 0.01
 D     <- pcnem:::sampleData.pcnem(Phi = Phi, M = M, map = KOmap, typeI.err = alpha, typeII.err = beta)$D
 
 # Setting all the control parameters and runnin pc-nem
-control            <- set.default.parameters(unique(colnames(D)),type="mLL",pcombi = TRUE, trans.close=FALSE)
+control            <- set.default.parameters(unique(colnames(D)), type = "mLL", pcombi = TRUE, trans.close = FALSE)
 control$map        <- as.matrix(KOmap)
 control$iterations <- 10000
 control$temper     <- TRUE
@@ -47,7 +47,7 @@ pcnem_mle          <- nem(D, inference = "AdaSimAnneal", control = control, verb
 
 # True network likelihood
 control$para <- c(alpha,beta)
-true_mle     <- nem(D,inference="search",control=control,verbose=FALSE, models = list(Phi))
+true_mle     <- nem(D, inference = "search", control = control, verbose = FALSE, models = list(Phi))
 
 # Plotting true and inferred network
 par(mfrow = c(1,2))
