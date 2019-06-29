@@ -41,8 +41,6 @@ D     <- pcnem:::sampleData.pcnem(Phi = Phi, M = M, map = KOmap, typeI.err = alp
 control            <- set.default.parameters(unique(colnames(D)), type = "mLL", pcombi = TRUE, trans.close = FALSE)
 control$map        <- as.matrix(KOmap)
 control$iterations <- 10000
-control$temper     <- TRUE
-control$AcceptRate <- 0.1
 pcnem_mle          <- nem(D, inference = "AdaSimAnneal", control = control, verbose = FALSE)
 
 # True network likelihood
