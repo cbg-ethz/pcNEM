@@ -3,7 +3,7 @@ score.aux <- function(models, D, control, verbose=TRUE, graphClass="graphNEL") {
   #if single model as input
   if (class(models)=="matrix") models <- list(models)    
 
-  # Which Sgenes were silenced?
+  # Which Sgenes were silenced
   if(control$pcombi== FALSE){
     Sgenes <- setdiff(unlist(control$map[intersect(names(control$map), colnames(D))]),"time")
     nrS <- length(Sgenes)
