@@ -1,12 +1,13 @@
-# Function for inferring networks using adaptive simulated annealing
+# Function for learning the closest DAG to consensus network after using bootstrap
 #
 # Author: Sumana Srivatsa
 ###############################################################################
 
-#' @title Adaptive simulated annealing for probabilistic combinatorial knockdowns
+#' @title Learn the closest DAG to consensus network after using bootstrap
 #'
 #' @description a function which performs adaptive simulated annealing to find
-#' the nearest DAG to the consensus directed graph. The code for adaptive simulated annealing
+#' the nearest DAG to the consensus directed graph after running bootstrap. The 
+#' code for adaptive simulated annealing
 #' has been developed using the code from the paper titled 'Partition MCMC for
 #' Inference on Acyclic Digraphs' by Jack Kuipers & Giusi Moffa which is further
 #' based on the code from the Dortmund course programmed by Miriam Lohr.
