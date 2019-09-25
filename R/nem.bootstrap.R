@@ -74,7 +74,7 @@ nem.bootstrap <- function(D, thresh=0.5, nboot=1000,inference="nem.greedy",model
 	control$Pm = NULL
 	control$Pe = NULL
 	if(control$pcombi==TRUE){
-	  if(is.DAG((overlapBoot>thresh)*1)){# Since the bootstrap graph need not necessarily be a DAG and pcnem 
+	  if(is.DAG((overlapBoot>thresh)*1)){# Since the bootstrap graph need not necessarily be a DAG and pcnem can't handle cycles
 	    res = nem(D,models=list((overlapBoot>thresh)*1),inference="search",control, verbose=verbose) 
 	  }else{
 	    print("The consensus graph is not a DAG. Searching for the nearest DAG")
