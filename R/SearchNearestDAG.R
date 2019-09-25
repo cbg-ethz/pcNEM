@@ -35,18 +35,19 @@
 
 SearchNearestDAG <- function(n,phi,D,control,consensus){
   
-  moveprobs <- control$moveprobs
-  Sigma <- control$sigma
+  moveprobs  <- control$moveprobs
+  Sigma      <- control$sigma
   iterations <- control$iterations
-  stepsave <- control$stepsave
-  fan.in <- (n-1)
+  stepsave   <- control$stepsave
+  fan.in     <- (n-1)
   revallowed <- control$revallowed
+  
   if(is.null(control$AcceptRate)){ # ideal acceptance rate
     AcceptRate <- 1/n
   }else{
     AcceptRate <- control$AcceptRate
   }
-  Temp <- control$Temp
+  Temp      <- control$Temp
   AdaptRate <- control$AdaptRate
   
   L1 <- list() # stores the adjecency matrices
@@ -58,9 +59,9 @@ SearchNearestDAG <- function(n,phi,D,control,consensus){
   
   # Initializing parameters
   Sgenes <- colnames(phi)
-  cmap <- 1-control$map # complementary probabilities
+  cmap   <- 1-control$map # complementary probabilities
   dimnames(cmap) <- dimnames(control$map)
-  nexp <- rownames(cmap) # number of experiments
+  nexp   <- rownames(cmap) # number of experiments
   D1 = sapply(nexp, function(s) rowSums(D[, colnames(D) == s, drop = FALSE])) # Signals present in the data
   D0 = sapply(nexp, function(s) sum(colnames(D) == s)) - D1 # Signals absent in the data
   
@@ -76,23 +77,23 @@ SearchNearestDAG <- function(n,phi,D,control,consensus){
   }
   
   initPertMats <- getperturb.matrices(cmap,phi,control) # To get initial propagation matrix and path count matrix
-  PropMat <- initPertMats$PropMat # Propagation matrix
-  PathMat <- initPertMats$PathMat # Path count matrix
-  Alpha <- control$para[1]
-  Beta <- control$para[2]
-  DAGParams <- DAGscore(PropMat,D1,D0,control,Alpha,Beta)
-  DAGLMat <- DAGParams$LMat
+  PropMat      <- initPertMats$PropMat # Propagation matrix
+  PathMat      <- initPertMats$PathMat # Path count matrix
+  Alpha        <- control$para[1]
+  Beta         <- control$para[2]
+  DAGParams    <- DAGscore(PropMat,D1,D0,control,Alpha,Beta)
+  DAGLMat      <- DAGParams$LMat
   currentDistance <- shd(as(phi,'graphNEL'),as(consensus,"graphNEL"))
   
   L1 <- c(L1,list(phi)) # starting adjacency matrix
   L2 <- c(L2,Temp) # starting temperature
   L3 <- c(L3,0) # starting acceptance rate
-  L4 <- c(L4,currentDistance)
+  L4 <- c(L4,currentDistance) # starting distance
     
-  bestScore <- DAGParams$mLL
-  bestGraph <- phi
+  bestScore   <- DAGParams$mLL
+  bestGraph   <- phi
   bestPropMat <- PropMat
-  minSteps <- 0
+  minSteps    <- 0
   bestDistance <- currentDistance
   
   naccepts_DAG <- 0
@@ -130,13 +131,13 @@ SearchNearestDAG <- function(n,phi,D,control,consensus){
     
     ### sample one of the three single edge operations
     if(revallowed==1){
-      operation<-sample.int(4,1,prob=c(num_reversal,num_deletion,num_addition,1)) # sample the type of move including staying still
+      operation <- sample.int(4,1,prob=c(num_reversal,num_deletion,num_addition,1)) # sample the type of move including staying still
     }else{
-      operation<-sample.int(3,1,prob=c(num_deletion,num_addition,1))+1 # sample the type of move including staying still
+      operation <- sample.int(3,1,prob=c(num_deletion,num_addition,1))+1 # sample the type of move including staying still
     }
     
     # 1 is edge reversal, 2 is deletion and 3 is additon. 4 represents choosing the current DAG
-    if(operation<4){ # if we don't stay still
+    if(operation < 4){ # if we don't stay still
       
       #### shifting of the phi matrix
       new_phi <- phi
@@ -221,7 +222,7 @@ SearchNearestDAG <- function(n,phi,D,control,consensus){
       num_reversal_new <- sum(re.new)
       
       ##### total number of neighbour graphs:
-      proposednbhoodnorevs<-sum(num_deletion_new, num_addition_new) + 1
+      proposednbhoodnorevs <- sum(num_deletion_new, num_addition_new) + 1
       proposednbhood <- proposednbhoodnorevs + num_reversal_new
       
       
@@ -238,9 +239,9 @@ SearchNearestDAG <- function(n,phi,D,control,consensus){
       proposedDistance <- shd(as(new_phi,'graphNEL'),as(consensus,"graphNEL"))
       
       if(revallowed==1){
-        scoreratio<-exp((proposedDistance-currentDistance)/Temp)*(currentnbhood/proposednbhood) #acceptance probability
+        scoreratio <- exp((proposedDistance-currentDistance)/Temp)*(currentnbhood/proposednbhood) #acceptance probability
       } else{
-        scoreratio<-exp((proposedDistance-currentDistance)/Temp)*(currentnbhoodnorevs/proposednbhoodnorevs) #acceptance probability
+        scoreratio <- exp((proposedDistance-currentDistance)/Temp)*(currentnbhoodnorevs/proposednbhoodnorevs) #acceptance probability
       }
       
       #if(is.na(proposedDAGlogscore)){browser()}
@@ -258,6 +259,7 @@ SearchNearestDAG <- function(n,phi,D,control,consensus){
         re <- re.new
         naccepts_DAG <- naccepts_DAG + 1
         
+        # If the new SHD is better replace the best distance
         if(bestDistance > currentDistance){
           proposedPertMats <- probmatrix.rescorenodes(phi,PropMat,cmap,PathMat,rescorenodes)
           PropMat <- proposedPertMats$PropMat
@@ -271,7 +273,7 @@ SearchNearestDAG <- function(n,phi,D,control,consensus){
           bestPropMat <- PropMat
           bestDistance <- currentDistance
         }
-        
+        # If the SHDs are the same then check if the scores are better for the proposed network and accept if true
         if(bestDistance == currentDistance){
           proposedPertMats <- probmatrix.rescorenodes(phi,PropMat,cmap,PathMat,rescorenodes)
           proposedPropMat <- proposedPertMats$PropMat
@@ -296,7 +298,7 @@ SearchNearestDAG <- function(n,phi,D,control,consensus){
     }  # end of staying still loop
     if(naccepts_DAG == stepsave){
       currentAR <- naccepts_DAG/stepsave  # current acceptance rate
-      Temp <- Temp * exp((0.5-currentAR^transformAR) * AdaptRate) # adapting the temperature according to the acceptance rate
+      Temp      <- Temp * exp((-0.5) * AdaptRate) 
       # Updating all
       L1 <- c(L1,list(phi))
       L2 <- c(L2,Temp)
