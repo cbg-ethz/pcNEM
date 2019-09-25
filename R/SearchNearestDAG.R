@@ -7,10 +7,10 @@
 #'
 #' @description a function which performs adaptive simulated annealing to find
 #' the nearest DAG to the consensus directed graph after running bootstrap. 
+#' The temperatures are cooled at a fixed rate but at varying intervals.
 #' NOTE : This function is different from the AdaSimulatedAnnealing which infers 
-#' the MLE network.
-#' The code for adaptive simulated annealing
-#' has been developed using the code from the paper titled 'Partition MCMC for
+#' the MLE network. 
+#' Parts of the code have been adapted using the code from the paper titled 'Partition MCMC for
 #' Inference on Acyclic Digraphs' by Jack Kuipers & Giusi Moffa which is further
 #' based on the code from the Dortmund course programmed by Miriam Lohr.
 #' The code has been modified to match it to the NEMs framework.
