@@ -6,8 +6,10 @@
 #' @title Learn the closest DAG to consensus network after using bootstrap
 #'
 #' @description a function which performs adaptive simulated annealing to find
-#' the nearest DAG to the consensus directed graph after running bootstrap. The 
-#' code for adaptive simulated annealing
+#' the nearest DAG to the consensus directed graph after running bootstrap. 
+#' NOTE : This function is different from the AdaSimulatedAnnealing which infers 
+#' the MLE network.
+#' The code for adaptive simulated annealing
 #' has been developed using the code from the paper titled 'Partition MCMC for
 #' Inference on Acyclic Digraphs' by Jack Kuipers & Giusi Moffa which is further
 #' based on the code from the Dortmund course programmed by Miriam Lohr.
